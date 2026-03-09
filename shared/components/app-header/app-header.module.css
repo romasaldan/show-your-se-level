@@ -1,0 +1,42 @@
+.header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.nav {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  font-weight: 600;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navLinkButton {
+  border: none;
+  box-shadow: none;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.navLinkButton:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.navLinkButton:active {
+  background-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(1px);
+}
