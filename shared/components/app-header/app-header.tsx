@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "../button/button";
 import styles from "./app-header.module.css";
 import { AppHeaderAuthLinks } from "./auth-links/auth-links";
+import { ThemeToggle } from "../theme-toggle/theme-toggle";
 
 export function AppHeader() {
   return (
@@ -16,6 +17,7 @@ export function AppHeader() {
             <Link href="/quiz">Quiz</Link>
           </Button>
           <AppHeaderAuthLinks />
+          <ThemeToggle />
         </div>
       </nav>
     </header>
