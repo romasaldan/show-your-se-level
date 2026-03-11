@@ -1,3 +1,5 @@
+import styles from "./mask-icon.module.css";
+
 type MaskIconProps = {
   iconUrl: string;
   className?: string;
@@ -6,16 +8,10 @@ type MaskIconProps = {
 export function MaskIcon({ iconUrl, className }: MaskIconProps) {
   return (
     <span
-      className={className}
+      className={`${styles.icon} ${className ?? ""}`.trim()}
       style={{
-        display: "inline-block",
         WebkitMaskImage: `url(${iconUrl})`,
         maskImage: `url(${iconUrl})`,
-        WebkitMaskRepeat: "no-repeat",
-        maskRepeat: "no-repeat",
-        WebkitMaskPosition: "center",
-        maskPosition: "center",
-        backgroundColor: "currentColor",
       }}
       aria-hidden="true"
     />
