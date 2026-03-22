@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "../../button/button";
+import { Button } from "../../../shared/components/button/button";
 import styles from "../app-header.module.css";
-import { useAuth } from "../../../hooks/use-auth";
+import { useAuth } from "../../../shared/hooks/use-auth";
 
 export function AppHeaderAuthLinks() {
   const { isAuthenticated } = useAuth();

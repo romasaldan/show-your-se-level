@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "../button/button";
+import { Button } from "../../shared/components/button/button";
 import styles from "./app-header.module.css";
 import { AppHeaderAuthLinks } from "./auth-links/auth-links";
 import { ThemeToggle } from "../theme-toggle/theme-toggle";

@@ -1,13 +1,22 @@
-.button {
-  cursor: pointer;
+.shell {
   border-radius: 9999px;
   border: 1px solid transparent;
   padding: 0.5rem;
-  background: transparent;
-  color: var(--foreground);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+}
+
+.placeholder {
+  background: transparent;
+  pointer-events: none;
+}
+
+.button {
+  cursor: pointer;
+  background: transparent;
+  color: var(--foreground);
 }
 
 .button:hover {
