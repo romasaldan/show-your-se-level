@@ -7,10 +7,9 @@ export function AppHeader() {
   return (
     <header className={styles.header}>
       <nav className={styles.nav}>
-        <span className={styles.brand}>Show Your SE Level</span>
+        <span className={styles.brand}>BRAG Diary</span>
         <div className={styles.links}>
-          <NavLinkButton href="/">Home</NavLinkButton>
-          <NavLinkButton href="/quiz">Quiz</NavLinkButton>
+          <NavLinkButton href="/">Profile</NavLinkButton>
           <AppHeaderAuthLinks />
           <ThemeToggle />
         </div>

@@ -1,8 +1,5 @@
+import { AuthView } from "@/views/auth/auth-view";
+
 export default function AuthPage() {
-  return (
-    <main>
-      <h1>Auth</h1>
-      <p>This is the authentication page skeleton.</p>
-    </main>
-  );
+  return <AuthView />;
 }

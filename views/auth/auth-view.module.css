@@ -1,0 +1,32 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.75rem;
+  padding-block: 0.5rem 1rem;
+  max-width: 28rem;
+  margin-inline: auto;
+}
+
+.intro {
+  text-align: center;
+}
+
+.title {
+  font-size: clamp(1.5rem, 4vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.lead {
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* `next-themes` sets class `dark` on <html>; :global so it isn’t hashed by CSS modules */
+:global(html.dark) .lead {
+  color: rgba(255, 255, 255, 0.78);
+}
