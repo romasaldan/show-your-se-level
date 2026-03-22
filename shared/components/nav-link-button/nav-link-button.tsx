@@ -10,16 +10,17 @@ import styles from "./nav-link-button.module.css";
 type NavLinkButtonProps = {
   href: string;
   children: ReactNode;
+  className?: string;
 };
 
-export function NavLinkButton({ href, children }: NavLinkButtonProps) {
+export function NavLinkButton({ href, children, className }: NavLinkButtonProps) {
   const pathname = usePathname();
   const active = isNavActive(pathname, href);
 
   return (
     <Button
       variant="ghost"
-      className={`${styles.navLinkButton}${active ? ` ${styles.navLinkButtonActive}` : ""}`}
+      className={`${styles.navLinkButton}${active ? ` ${styles.navLinkButtonActive}` : ""}${className ? ` ${className}` : ""}`}
     >
       <Link href={href}>{children}</Link>
     </Button>
