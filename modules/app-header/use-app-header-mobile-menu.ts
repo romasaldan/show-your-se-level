@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 
 export function useAppHeaderMobileMenu() {
-  const pathname = usePathname();
+  const { pathname } = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [storedPathname, setStoredPathname] = useState(pathname);
 

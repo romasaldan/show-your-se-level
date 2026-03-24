@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 import { Button } from "../button/button";
 import { isNavActive } from "../../utils/is-nav-active";
 import styles from "./nav-link-button.module.css";
@@ -14,7 +14,7 @@ type NavLinkButtonProps = {
 };
 
 export function NavLinkButton({ href, children, className }: NavLinkButtonProps) {
-  const pathname = usePathname();
+  const { pathname } = useRouter();
   const active = isNavActive(pathname, href);
 
   return (
