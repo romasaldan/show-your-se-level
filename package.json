@@ -8,12 +8,20 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prisma:generate": "dotenv -e .env.local -- prisma generate",
+    "prisma:push": "dotenv -e .env.local -- prisma db push",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f postgres"
   },
   "dependencies": {
+    "@prisma/client": "^6.16.2",
     "next": "16.1.6",
     "next-auth": "^4.24.13",
     "next-themes": "^0.4.6",
+    "pg": "^8.20.0",
+    "prisma": "^6.16.2",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "shadcn-ui": "^0.9.5"
@@ -23,6 +31,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "typescript": "^5",
