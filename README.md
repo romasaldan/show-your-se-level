@@ -43,4 +43,6 @@ With the default `.env.example` values:
 - database: `show_your_se_level`
 - username: `postgres`
 - password: `postgres`
-- url: `postgresql://postgres:postgres@localhost:5432/show_your_se_level`
+- `DATABASE_URL`: `postgresql://postgres:postgres@localhost:5432/show_your_se_level`
+- `POSTGRES_URL`: `postgresql://postgres:postgres@localhost:5432/show_your_se_level`
+- `PRISMA_DATABASE_URL`: `postgresql://postgres:postgres@localhost:5432/show_your_se_level`
