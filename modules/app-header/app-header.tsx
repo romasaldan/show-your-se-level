@@ -30,6 +30,9 @@ export function AppHeader() {
           id={menuId}
           className={`${styles.links} ${menuOpen ? styles.linksOpen : ""}`}
         >
+          <NavLinkButton href="/diary" className={styles.mobileNavItem}>
+            Diary
+          </NavLinkButton>
           <NavLinkButton href="/profile" className={styles.mobileNavItem}>
             Profile
           </NavLinkButton>
