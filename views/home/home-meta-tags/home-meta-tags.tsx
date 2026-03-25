@@ -1,20 +1,27 @@
 import Head from "next/head";
+import type { AppLocale } from "@/i18n/config";
+import { t } from "@/i18n/t";
 
-export function HomeMetaTags() {
+export function HomeMetaTags({ locale }: { locale: AppLocale }) {
+  const title = t(locale, "home.meta.title");
+  const description = t(locale, "home.meta.description");
+  const ogTitle = t(locale, "home.meta.ogTitle");
+  const ogDescription = t(locale, "home.meta.ogDescription");
+
   return (
     <Head>
-      <title>BRAG Diary — Daily developer achievement and skills log</title>
+      <title>{title}</title>
       <meta
         name="description"
-        content="Record daily software engineering achievements, link them to skills you improved, and browse your timeline and profile on mobile or desktop. Built for developers who want a living record of how they grow."
+        content={description}
       />
       <meta
         property="og:title"
-        content="BRAG Diary — Daily developer achievement and skills log"
+        content={ogTitle}
       />
       <meta
         property="og:description"
-        content="Record daily achievements and skills growth. Timeline, profile, and filters designed for developers."
+        content={ogDescription}
       />
       <meta property="og:type" content="website" />
     </Head>

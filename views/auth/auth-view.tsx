@@ -1,19 +1,24 @@
 import { GitHubSignIn } from "@/modules/auth/github-sign-in/github-sign-in";
 import styles from "./auth-view.module.css";
 
-export function AuthView() {
+import type { AppLocale } from "@/i18n/config";
+import { t } from "@/i18n/t";
+
+export function AuthView({ locale }: { locale: AppLocale }) {
+  const title = t(locale, "page.auth.title");
+  const lead = t(locale, "page.auth.lead");
+
   return (
     <section className={styles.section} aria-labelledby="auth-heading">
       <div className={styles.intro}>
         <h1 id="auth-heading" className={styles.title}>
-          Sign in
+          {title}
         </h1>
         <p className={styles.lead}>
-          Use your GitHub account to access your profile and keep your progress
-          tied to one identity.
+          {lead}
         </p>
       </div>
-      <GitHubSignIn />
+      <GitHubSignIn locale={locale} />
     </section>
   );
 }

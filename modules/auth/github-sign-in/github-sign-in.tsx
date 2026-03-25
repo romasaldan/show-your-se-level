@@ -2,6 +2,8 @@
 
 import { Button } from "@/shared/components/button/button";
 import { useAuth } from "@/shared/hooks/use-auth";
+import type { AppLocale } from "@/i18n/config";
+import { t } from "@/i18n/t";
 import styles from "./github-sign-in.module.css";
 
 function GitHubMark() {
@@ -22,14 +24,18 @@ function GitHubMark() {
   );
 }
 
-export function GitHubSignIn() {
+export function GitHubSignIn({ locale }: { locale: AppLocale }) {
   const { login, isLoading } = useAuth();
+  const hint = t(locale, "auth.github.hint");
+  const continueLabel = t(locale, "auth.github.continue");
+  const connectingLabel = t(locale, "auth.github.connecting");
+  const ariaConnecting = t(locale, "auth.github.ariaConnecting");
+  const ariaContinue = t(locale, "auth.github.ariaContinue");
 
   return (
     <div className={styles.card}>
       <p className={styles.hint}>
-        You’ll leave this site briefly to authorize with GitHub, then return
-        to your profile.
+        {hint}
       </p>
       <Button
         type="button"
@@ -38,17 +44,17 @@ export function GitHubSignIn() {
         onClick={() => login()}
         disabled={isLoading}
         aria-busy={isLoading}
-        aria-label={isLoading ? "Connecting to GitHub" : "Continue with GitHub"}
+        aria-label={isLoading ? ariaConnecting : ariaContinue}
       >
         {isLoading ? (
           <>
             <span className={styles.spinner} aria-hidden />
-            Connecting…
+            {connectingLabel}
           </>
         ) : (
           <>
             <GitHubMark />
-            Continue with GitHub
+            {continueLabel}
           </>
         )}
       </Button>

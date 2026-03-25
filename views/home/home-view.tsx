@@ -2,20 +2,20 @@ import Link from "next/link";
 import styles from "./home-view.module.css";
 import { HomeMetaTags } from "./home-meta-tags/home-meta-tags";
 
-export function HomeView() {
+import type { AppLocale } from "@/i18n/config";
+import { t } from "@/i18n/t";
+
+export function HomeView({ locale }: { locale: AppLocale }) {
   return (
     <>
-      <HomeMetaTags />
+      <HomeMetaTags locale={locale} />
       <div className={styles.root}>
         <section className={styles.hero} aria-labelledby="home-hero-heading">
           <h1 id="home-hero-heading" className={styles.title}>
-            A daily diary for what you ship and the skills you grow
+            {t(locale, "home.hero.title")}
           </h1>
           <p className={styles.lead}>
-            Record achievements from your workday—features shipped, bugs fixed,
-            lessons learned—and tie each entry to the skills you want employers
-            and collaborators to see. Over time you build a clear picture of how
-            you practice software engineering, not just what is on your resume.
+            {t(locale, "home.hero.lead")}
           </p>
         </section>
 
@@ -24,29 +24,31 @@ export function HomeView() {
           aria-labelledby="home-features-heading"
         >
           <h2 id="home-features-heading" className={styles.sectionTitle}>
-            Built for developers who want their progress to be visible
+            {t(locale, "home.features.title")}
           </h2>
           <ul className={styles.list}>
             <li className={styles.listItem}>
-              <h3 className={styles.itemTitle}>Daily achievements</h3>
+              <h3 className={styles.itemTitle}>
+                {t(locale, "home.features.daily.title")}
+              </h3>
               <p className={styles.itemBody}>
-                Capture what happened today in short, concrete entries so your
-                history stays accurate and easy to revisit.
+                {t(locale, "home.features.daily.body")}
               </p>
             </li>
             <li className={styles.listItem}>
-              <h3 className={styles.itemTitle}>Skills that match your story</h3>
+              <h3 className={styles.itemTitle}>
+                {t(locale, "home.features.skills.title")}
+              </h3>
               <p className={styles.itemBody}>
-                Link each achievement to skills you strengthened—frameworks,
-                practices, or soft skills—so your profile reflects real evidence.
+                {t(locale, "home.features.skills.body")}
               </p>
             </li>
             <li className={styles.listItem}>
-              <h3 className={styles.itemTitle}>Profile, timeline, and focus</h3>
+              <h3 className={styles.itemTitle}>
+                {t(locale, "home.features.profile.title")}
+              </h3>
               <p className={styles.itemBody}>
-                Browse a chronological log, skim a project-oriented summary, and
-                filter by skill to prepare for interviews, reviews, or your own
-                reflection.
+                {t(locale, "home.features.profile.body")}
               </p>
             </li>
           </ul>
@@ -54,19 +56,17 @@ export function HomeView() {
 
         <section className={styles.section} aria-labelledby="home-cta-heading">
           <h2 id="home-cta-heading" className={styles.sectionTitle}>
-            Start your log
+            {t(locale, "home.cta.title")}
           </h2>
           <p className={styles.lead}>
-            Sign in to add entries and open your profile. The app is designed to
-            work well on phones and desktops so you can jot things down whenever
-            you wrap up the day.
+            {t(locale, "home.cta.lead")}
           </p>
           <div className={styles.ctaRow}>
             <Link href="/auth" className={styles.cta}>
-              Sign in
+              {t(locale, "home.cta.signIn")}
             </Link>
             <Link href="/profile" className={styles.cta}>
-              Go to profile
+              {t(locale, "home.cta.goToProfile")}
             </Link>
           </div>
         </section>
