@@ -13,6 +13,7 @@ import {
   useComboboxAnchor,
 } from "@/shared/components/ui/combobox";
 import { Button } from "@/shared/components/button/button";
+import { XIcon } from "lucide-react";
 
 export type ComboboxOption = { value: string; label: string };
 
@@ -57,6 +58,18 @@ export function Combobox({
           </ComboboxValue>
 
           <ComboboxChipsInput placeholder={placeholder ?? "Select..."} />
+          {values.length > 0 ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-xs"
+              className="shrink-0"
+              onClick={() => onChange([])}
+              aria-label="Clear selected skills"
+            >
+              <XIcon className="pointer-events-none" />
+            </Button>
+          ) : null}
         </ComboboxChips>
 
         <ComboboxContent anchor={anchorRef}>
@@ -71,16 +84,6 @@ export function Combobox({
         </ComboboxContent>
       </ShadcnCombobox>
 
-      {values.length > 0 ? (
-        <Button
-          type="button"
-          variant="ghost"
-          className="mt-2 w-full font-semibold"
-          onClick={() => onChange([])}
-        >
-          Clear
-        </Button>
-      ) : null}
     </div>
   );
 }

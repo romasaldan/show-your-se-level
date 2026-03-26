@@ -68,8 +68,15 @@ function SelectContent({
     SelectPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset" | "alignItemWithTrigger"
   >) {
+  const drawerContentContainer =
+    typeof document !== "undefined"
+      ? (document.querySelector(
+          "[data-slot='drawer-content']"
+        ) as HTMLElement | null)
+      : null
+
   return (
-    <SelectPrimitive.Portal>
+    <SelectPrimitive.Portal container={drawerContentContainer ?? undefined}>
       <SelectPrimitive.Positioner
         side={side}
         sideOffset={sideOffset}

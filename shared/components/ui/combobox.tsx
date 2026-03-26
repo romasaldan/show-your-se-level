@@ -95,8 +95,15 @@ function ComboboxContent({
     ComboboxPrimitive.Positioner.Props,
     "side" | "align" | "sideOffset" | "alignOffset" | "anchor"
   >) {
+  const drawerContentContainer =
+    typeof document !== "undefined"
+      ? (document.querySelector(
+          "[data-slot='drawer-content']"
+        ) as HTMLElement | null)
+      : null
+
   return (
-    <ComboboxPrimitive.Portal>
+    <ComboboxPrimitive.Portal container={drawerContentContainer ?? undefined}>
       <ComboboxPrimitive.Positioner
         side={side}
         sideOffset={sideOffset}
