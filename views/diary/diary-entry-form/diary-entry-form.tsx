@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { RhfInputField } from "@/shared/forms/rhf-input-field";
 import { RhfTextareaField } from "@/shared/forms/rhf-textarea-field";
 import { RhfControllerField } from "@/shared/forms/rhf-controller-field";
+import { DatePicker } from "@/shared/components/date-picker/date-picker";
 import { createDiaryEntryFormSchema } from "./diary-entry-form.schema";
 
 type DiaryEntryFormProps = {
@@ -98,10 +99,17 @@ export function DiaryEntryForm({
           onSubmit(draft);
         })}
       >
-        <RhfInputField
+        <RhfControllerField
           name="date"
           label={t(locale, "page.diary.form.fields.date")}
-          inputProps={{ type: "date" }}
+          render={(field) => (
+            <DatePicker
+              value={field.value as string}
+              onChange={field.onChange}
+              placeholder={t(locale, "page.diary.form.fields.date")}
+              locale={locale}
+            />
+          )}
         />
 
         <RhfInputField
