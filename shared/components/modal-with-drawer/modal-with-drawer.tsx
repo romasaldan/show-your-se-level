@@ -54,7 +54,7 @@ export function ModalWithDrawer({
     <Drawer
       open={open}
       modal={false}
-      dismissible={false}
+      dismissible
       onOpenChange={(nextOpen) => !nextOpen && onClose()}
     >
       <DrawerContent>
