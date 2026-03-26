@@ -1,9 +1,13 @@
-import type { ButtonHTMLAttributes } from "react";
-import styles from "./button.module.css";
+import type React from "react";
+
+import { Button as ShadcnButton } from "@/shared/components/ui/button";
 
 type ButtonVariant = "default" | "ghost";
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+type ButtonProps = Omit<
+  React.ComponentPropsWithoutRef<typeof ShadcnButton>,
+  "variant"
+> & {
   variant?: ButtonVariant;
 };
 
@@ -12,14 +16,5 @@ export function Button({
   className,
   ...props
 }: ButtonProps) {
-  const variantClass =
-    variant === "ghost" ? styles.ghost : styles.default;
-
-  return (
-    <button
-      className={`${styles.button} ${variantClass} ${className ?? ""}`}
-      {...props}
-    />
-  );
+  return <ShadcnButton variant={variant} className={className} {...props} />;
 }
-

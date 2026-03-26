@@ -98,70 +98,69 @@ export function DiaryEntryForm({
           onSubmit(draft);
         })}
       >
-      <RhfInputField
-        name="date"
-        label={t(locale, "page.diary.form.fields.date")}
-        inputProps={{ type: "date" }}
-      />
+        <RhfInputField
+          name="date"
+          label={t(locale, "page.diary.form.fields.date")}
+          inputProps={{ type: "date" }}
+        />
 
-      <RhfInputField
-        name="title"
-        label={t(locale, "page.diary.form.fields.title")}
-        inputProps={{
-          placeholder:
-            mode === "create"
-              ? t(locale, "page.diary.form.placeholders.titleCreate")
-              : t(locale, "page.diary.form.placeholders.titleEdit"),
-        }}
-      />
+        <RhfInputField
+          name="title"
+          label={t(locale, "page.diary.form.fields.title")}
+          inputProps={{
+            placeholder:
+              mode === "create"
+                ? t(locale, "page.diary.form.placeholders.titleCreate")
+                : t(locale, "page.diary.form.placeholders.titleEdit"),
+          }}
+        />
 
-      <RhfTextareaField
-        name="details"
-        label={t(locale, "page.diary.form.fields.details")}
-        textareaProps={{
-          rows: 4,
-          placeholder: t(locale, "page.diary.form.placeholders.details"),
-        }}
-      />
+        <RhfTextareaField
+          name="details"
+          label={t(locale, "page.diary.form.fields.details")}
+          textareaProps={{
+            rows: 4,
+            placeholder: t(locale, "page.diary.form.placeholders.details"),
+          }}
+        />
 
-      <RhfControllerField
-        name="selectedSkills"
-        label={t(locale, "page.diary.form.fields.skills")}
-        render={(field) => (
-          <Combobox
-            label={t(locale, "page.diary.form.fields.skills")}
-            options={skillOptions}
-            values={field.value as string[]}
-            onChange={field.onChange}
-            placeholder={t(locale, "page.diary.form.placeholders.skills")}
-          />
-        )}
-      />
+        <RhfControllerField
+          name="selectedSkills"
+          label={t(locale, "page.diary.form.fields.skills")}
+          render={(field) => (
+            <Combobox
+              label={t(locale, "page.diary.form.fields.skills")}
+              options={skillOptions}
+              values={field.value as string[]}
+              onChange={field.onChange}
+              placeholder={t(locale, "page.diary.form.placeholders.skills")}
+            />
+          )}
+        />
 
-      <RhfControllerField
-        name="importance"
-        label={t(locale, "page.diary.form.fields.importance")}
-        render={(field) => (
-          <Select
-            label={t(locale, "page.diary.form.fields.importance")}
-            options={[
-              { value: "low", label: importanceLabel("low") },
-              { value: "medium", label: importanceLabel("medium") },
-              { value: "high", label: importanceLabel("high") },
-            ]}
-            value={field.value as ImportanceLevel}
-            onChange={(value) => field.onChange(value as ImportanceLevel)}
-          />
-        )}
-      />
+        <RhfControllerField
+          name="importance"
+          label={t(locale, "page.diary.form.fields.importance")}
+          render={(field) => (
+            <Select
+              label={t(locale, "page.diary.form.fields.importance")}
+              options={[
+                { value: "low", label: importanceLabel("low") },
+                { value: "medium", label: importanceLabel("medium") },
+                { value: "high", label: importanceLabel("high") },
+              ]}
+              value={field.value as ImportanceLevel}
+              onChange={(value) => field.onChange(value as ImportanceLevel)}
+            />
+          )}
+        />
 
-      <FormActions
-        cancelLabel={t(locale, "page.diary.form.actions.cancel")}
-        submitLabel={t(locale, "page.diary.form.actions.save")}
-        onCancel={onCancel}
-      />
+        <FormActions
+          cancelLabel={t(locale, "page.diary.form.actions.cancel")}
+          submitLabel={t(locale, "page.diary.form.actions.save")}
+          onCancel={onCancel}
+        />
       </form>
     </FormProvider>
   );
 }
-

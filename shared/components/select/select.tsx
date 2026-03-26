@@ -1,8 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import styles from "./select.module.css";
+import {
+  Select as ShadcnSelect,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/ui/select";
 
 export type SelectOption = { value: string; label: string };
 
@@ -14,112 +18,33 @@ type SelectProps = {
 };
 
 export function Select({ options, value, onChange, label }: SelectProps) {
-  const [open, setOpen] = useState(false);
-  const rootRef = useRef<HTMLDivElement | null>(null);
-  const triggerRef = useRef<HTMLButtonElement | null>(null);
-  const [menuStyle, setMenuStyle] = useState<{
-    top: number;
-    left: number;
-    width: number;
-  } | null>(null);
-
-  const selectedOption = useMemo(
-    () => options.find((o) => o.value === value),
-    [options, value],
-  );
-
-  useEffect(() => {
-    function onDocMouseDown(e: MouseEvent) {
-      if (!rootRef.current) return;
-      if (!rootRef.current.contains(e.target as Node)) setOpen(false);
-    }
-    document.addEventListener("mousedown", onDocMouseDown);
-    return () => document.removeEventListener("mousedown", onDocMouseDown);
-  }, []);
-
-  useEffect(() => {
-    function updateMenuPosition() {
-      if (!triggerRef.current) return;
-      const rect = triggerRef.current.getBoundingClientRect();
-      setMenuStyle({
-        top: rect.bottom + 6,
-        left: rect.left,
-        width: rect.width,
-      });
-    }
-
-    if (!open) return;
-    updateMenuPosition();
-    window.addEventListener("resize", updateMenuPosition);
-    window.addEventListener("scroll", updateMenuPosition, true);
-    return () => {
-      window.removeEventListener("resize", updateMenuPosition);
-      window.removeEventListener("scroll", updateMenuPosition, true);
-    };
-  }, [open]);
-
-  useEffect(() => {
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
-    }
-    if (!open) return;
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open]);
+  const selectedOption = options.find((o) => o.value === value);
 
   return (
-    <div className={styles.root} ref={rootRef}>
-      {label ? <div className={styles.srOnly}>{label}</div> : null}
-      <button
-        type="button"
-        ref={triggerRef}
-        className={styles.trigger}
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
-      >
-        <span className={styles.triggerLabel}>
-          {selectedOption?.label ?? value}
-        </span>
-        <span className={styles.caret}>▾</span>
-      </button>
+    <div className="w-full">
+      {label ? <div className="sr-only">{label}</div> : null}
 
-      {open && menuStyle
-        ? createPortal(
-            <div
-              className={styles.menu}
-              role="listbox"
-              aria-label={label}
-              style={{
-                top: `${menuStyle.top}px`,
-                left: `${menuStyle.left}px`,
-                width: `${menuStyle.width}px`,
-              }}
-            >
-              {options.map((opt) => {
-                const isSelected = opt.value === value;
-                return (
-                  <button
-                    key={opt.value}
-                    type="button"
-                    className={`${styles.option} ${
-                      isSelected ? styles.optionSelected : ""
-                    }`}
-                    role="option"
-                    aria-selected={isSelected}
-                    onClick={() => {
-                      onChange(opt.value);
-                      setOpen(false);
-                    }}
-                  >
-                    {opt.label}
-                  </button>
-                );
-              })}
-            </div>,
-            document.body,
-          )
-        : null}
+      <ShadcnSelect
+        value={value}
+        onValueChange={(nextValue) => {
+          if (nextValue == null) return;
+          onChange(String(nextValue));
+        }}
+      >
+        <SelectTrigger className="w-full">
+          <SelectValue
+            placeholder={selectedOption?.label ?? value}
+          />
+        </SelectTrigger>
+
+        <SelectContent>
+          {options.map((opt) => (
+            <SelectItem key={opt.value} value={opt.value}>
+              {opt.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </ShadcnSelect>
     </div>
   );
 }

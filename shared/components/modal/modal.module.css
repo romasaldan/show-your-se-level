@@ -15,6 +15,7 @@
   margin-top: 4vh;
   border-radius: 0.95rem;
   background-color: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   overflow: hidden;
 }
@@ -49,14 +50,29 @@
 }
 
 :global(.dark) .content {
-  background-color: rgba(17, 24, 39, 0.98);
+  background-color: #111317;
+  border-color: rgba(148, 163, 184, 0.18);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55);
 }
 
 :global(.dark) .header {
-  border-bottom-color: rgba(255, 255, 255, 0.12);
+  border-bottom-color: rgba(148, 163, 184, 0.18);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.01) 100%
+  );
+}
+
+:global(.dark) .title {
+  color: rgba(241, 245, 249, 0.96);
 }
 
 :global(.dark) .closeButton {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(203, 213, 225, 0.84);
+}
+
+:global(.dark) .closeButton:hover {
+  color: rgba(248, 250, 252, 0.95);
 }
 
