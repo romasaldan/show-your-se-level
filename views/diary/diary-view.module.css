@@ -21,10 +21,8 @@
 }
 
 .addEntryButton {
+  align-self: flex-start;
   width: fit-content;
-  padding: 0.65rem 1rem;
-  border-radius: 0.75rem;
-  font-weight: 600;
 }
 
 .entries {

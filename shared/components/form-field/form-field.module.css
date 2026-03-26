@@ -1,0 +1,17 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.label {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.error {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #b91c1c;
+}
+
