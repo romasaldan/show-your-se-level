@@ -21,6 +21,26 @@ export const MESSAGES: Record<AppLocale, Messages> = {
     "page.diary.title": "Diary",
     "page.diary.subtitle":
       "Signed in as {label}. Capture what you shipped and the skills you strengthened today.",
+    "page.diary.addEntry": "Add new diary entry",
+    "page.diary.entriesHeading": "Recent diary entries",
+    "page.diary.entry1.date": "Today",
+    "page.diary.entry1.title": "Released profile filter by skill",
+    "page.diary.entry1.details":
+      "Implemented filtering so achievements can be explored by selected skill tags.",
+    "page.diary.entry1.skills": "Skills: React, Product thinking",
+    "page.diary.entry1.importance": "Importance: High",
+    "page.diary.entry2.date": "Yesterday",
+    "page.diary.entry2.title": "Fixed slow dashboard query",
+    "page.diary.entry2.details":
+      "Refactored data loading to avoid duplicate requests and reduced page load time.",
+    "page.diary.entry2.skills": "Skills: SQL, Performance optimization",
+    "page.diary.entry2.importance": "Importance: Medium",
+    "page.diary.entry3.date": "Mar 22, 2026",
+    "page.diary.entry3.title": "Documented API output for CV builder",
+    "page.diary.entry3.details":
+      "Added clear response examples for achievements and linked skills in public docs.",
+    "page.diary.entry3.skills": "Skills: API design, Technical writing",
+    "page.diary.entry3.importance": "Importance: High",
 
     "page.auth.title": "Sign in",
     "page.auth.lead":
@@ -81,6 +101,26 @@ export const MESSAGES: Record<AppLocale, Messages> = {
     "page.diary.title": "Щоденник",
     "page.diary.subtitle":
       "Увійшли як {label}. Запишіть, що ви здали сьогодні, і які навички зміцнили.",
+    "page.diary.addEntry": "Додати новий запис",
+    "page.diary.entriesHeading": "Останні записи щоденника",
+    "page.diary.entry1.date": "Сьогодні",
+    "page.diary.entry1.title": "Запущено фільтр профілю за навичками",
+    "page.diary.entry1.details":
+      "Реалізовано фільтрацію, щоб досягнення можна було переглядати за обраними тегами навичок.",
+    "page.diary.entry1.skills": "Навички: React, Продуктове мислення",
+    "page.diary.entry1.importance": "Важливість: Висока",
+    "page.diary.entry2.date": "Учора",
+    "page.diary.entry2.title": "Виправлено повільний запит дашборду",
+    "page.diary.entry2.details":
+      "Перероблено завантаження даних без дубльованих запитів і зменшено час завантаження сторінки.",
+    "page.diary.entry2.skills": "Навички: SQL, Оптимізація продуктивності",
+    "page.diary.entry2.importance": "Важливість: Середня",
+    "page.diary.entry3.date": "22 бер 2026",
+    "page.diary.entry3.title": "Задокументовано API-відповідь для CV-конструктора",
+    "page.diary.entry3.details":
+      "Додано зрозумілі приклади відповіді для досягнень і пов'язаних навичок у публічній документації.",
+    "page.diary.entry3.skills": "Навички: Проєктування API, Технічне письмо",
+    "page.diary.entry3.importance": "Важливість: Висока",
 
     "page.auth.title": "Увійти",
     "page.auth.lead":

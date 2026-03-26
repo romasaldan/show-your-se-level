@@ -1,0 +1,23 @@
+.root {
+  min-height: 100%;
+}
+
+.entryDate {
+  font-size: 0.875rem;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.entryTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.entryDetails,
+.entrySkills,
+.entryImportance {
+  line-height: 1.4;
+}
+
+:global(.dark) .entryDate {
+  color: rgba(255, 255, 255, 0.7);
+}
