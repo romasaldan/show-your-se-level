@@ -24,6 +24,8 @@ export const MESSAGES: Record<AppLocale, Messages> = {
     "page.diary.addEntry": "Add new diary entry",
     "page.diary.entriesHeading": "Recent diary entries",
     "page.diary.record.edit": "Edit",
+    "page.diary.record.delete": "Delete",
+    "page.diary.confirm.delete": "Delete this diary entry?",
 
     "page.diary.importance.prefix": "Importance",
     "page.diary.importance.low": "Low",
@@ -49,6 +51,7 @@ export const MESSAGES: Record<AppLocale, Messages> = {
     "page.diary.form.placeholders.skills": "Select skills",
     "page.diary.form.placeholders.project": "Select project",
     "page.diary.toast.saveFailed": "Failed to save diary entry",
+    "page.diary.toast.deleteFailed": "Failed to delete diary entry",
     "page.diary.project.prefix": "Project",
 
     "page.diary.entry1.date": "2026-03-26",
@@ -134,6 +137,8 @@ export const MESSAGES: Record<AppLocale, Messages> = {
     "page.diary.addEntry": "Додати новий запис",
     "page.diary.entriesHeading": "Останні записи щоденника",
     "page.diary.record.edit": "Редагувати",
+    "page.diary.record.delete": "Видалити",
+    "page.diary.confirm.delete": "Видалити цей запис щоденника?",
 
     "page.diary.importance.prefix": "Важливість",
     "page.diary.importance.low": "Низька",
@@ -159,6 +164,7 @@ export const MESSAGES: Record<AppLocale, Messages> = {
     "page.diary.form.placeholders.skills": "Оберіть навички (напр., React, SQL)",
     "page.diary.form.placeholders.project": "Оберіть проєкт",
     "page.diary.toast.saveFailed": "Не вдалося зберегти запис щоденника",
+    "page.diary.toast.deleteFailed": "Не вдалося видалити запис щоденника",
     "page.diary.project.prefix": "Проєкт",
 
     "page.diary.entry1.date": "2026-03-26",

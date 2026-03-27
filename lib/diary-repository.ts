@@ -98,6 +98,21 @@ export async function updateEntry(
   return toEntry(achievement);
 }
 
+export async function deleteEntry(userId: string, achievementId: string): Promise<void> {
+  const existing = await prisma.achievement.findUnique({
+    where: { id: achievementId },
+    select: { userId: true },
+  });
+
+  if (!existing || existing.userId !== userId) {
+    throw new Error("Achievement not found or access denied");
+  }
+
+  await prisma.achievement.delete({
+    where: { id: achievementId },
+  });
+}
+
 export async function listSkills(): Promise<string[]> {
   const skills = await prisma.skill.findMany({
     orderBy: { name: "asc" },

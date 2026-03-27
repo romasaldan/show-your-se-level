@@ -10,9 +10,15 @@ type DiaryRecordItemProps = {
   entry: DiaryEntry;
   locale: AppLocale;
   onEdit?: (entryId: string) => void;
+  onDelete?: (entryId: string) => void;
 };
 
-export function DiaryRecordItem({ entry, locale, onEdit }: DiaryRecordItemProps) {
+export function DiaryRecordItem({
+  entry,
+  locale,
+  onEdit,
+  onDelete,
+}: DiaryRecordItemProps) {
   const importanceValue = t(locale, `page.diary.importance.${entry.importance}`);
   const importanceText = `${t(locale, "page.diary.importance.prefix")}: ${importanceValue}`;
   const skillsText = `${t(locale, "page.diary.skills.prefix")}: ${entry.skills}`;
@@ -29,16 +35,29 @@ export function DiaryRecordItem({ entry, locale, onEdit }: DiaryRecordItemProps)
       <p className={styles.entryImportance}>{importanceText}</p>
       <p className={styles.entryProject}>{projectText}</p>
 
-      {onEdit ? (
+      {onEdit || onDelete ? (
         <div className={styles.actions}>
-          <Button
-            type="button"
-            variant="ghost"
-            className={styles.editButton}
-            onClick={() => onEdit(entry.id)}
-          >
-            {t(locale, "page.diary.record.edit")}
-          </Button>
+          {onEdit ? (
+            <Button
+              type="button"
+              variant="ghost"
+              className={styles.editButton}
+              onClick={() => onEdit(entry.id)}
+            >
+              {t(locale, "page.diary.record.edit")}
+            </Button>
+          ) : null}
+
+          {onDelete ? (
+            <Button
+              type="button"
+              variant="ghost"
+              className={styles.deleteButton}
+              onClick={() => onDelete(entry.id)}
+            >
+              {t(locale, "page.diary.record.delete")}
+            </Button>
+          ) : null}
         </div>
       ) : null}
     </CardContainer>

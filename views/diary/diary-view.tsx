@@ -8,6 +8,7 @@ import type { AppLocale } from "@/i18n/config";
 import { t } from "@/i18n/t";
 import {
   createDiaryEntryAction,
+  deleteDiaryEntryAction,
   updateDiaryEntryAction,
 } from "@/shared/api/diary";
 import { Button } from "@/shared/components/button/button";
@@ -39,11 +40,14 @@ export function DiaryView({
   const addEntryLabel = t(locale, "page.diary.addEntry");
   const entriesHeading = t(locale, "page.diary.entriesHeading");
   const saveErrorLabel = t(locale, "page.diary.toast.saveFailed");
+  const deleteErrorLabel = t(locale, "page.diary.toast.deleteFailed");
+  const deleteConfirmLabel = t(locale, "page.diary.confirm.delete");
 
   const [entries, setEntries] = useState<DiaryEntry[]>(initialEntries);
   const [isEntryModalOpen, setIsEntryModalOpen] = useState(false);
   const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [deletingEntryId, setDeletingEntryId] = useState<string | null>(null);
 
   const defaultProject = projects.find((p) => p.isDefault) ?? projects[0];
 
@@ -113,6 +117,24 @@ export function DiaryView({
     });
   };
 
+  const onDeleteEntry = async (entryId: string) => {
+    if (deletingEntryId) return;
+    if (!window.confirm(deleteConfirmLabel)) return;
+
+    setDeletingEntryId(entryId);
+    await deleteDiaryEntryAction({
+      entryId,
+      onDeleted: (deletedId) => {
+        setEntries((prev) => prev.filter((entry) => entry.id !== deletedId));
+        if (editingEntryId === deletedId) {
+          closeModal();
+        }
+      },
+      onError: (message) => toast.error(message || deleteErrorLabel),
+      onSettled: () => setDeletingEntryId(null),
+    });
+  };
+
   return (
     <div className={styles.root}>
       <section className={styles.header} aria-labelledby="diary-title">
@@ -145,6 +167,7 @@ export function DiaryView({
               entry={entry}
               locale={locale}
               onEdit={openEditModal}
+              onDelete={onDeleteEntry}
             />
           ))}
         </div>

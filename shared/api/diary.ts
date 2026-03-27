@@ -24,6 +24,18 @@ export async function updateDiaryEntry(
   return parseApiResponse<DiaryEntry>(response, "Failed to update entry");
 }
 
+type DeleteDiaryEntryResponse = {
+  id: string;
+};
+
+export async function deleteDiaryEntry(entryId: string): Promise<DeleteDiaryEntryResponse> {
+  const response = await fetch(`/api/diary/${entryId}`, {
+    method: "DELETE",
+  });
+
+  return parseApiResponse<DeleteDiaryEntryResponse>(response, "Failed to delete entry");
+}
+
 type DiaryActionCallbacks = {
   onSuccess?: () => void;
   onError?: (message: string) => void;
@@ -73,5 +85,27 @@ export async function updateDiaryEntryAction({
     onError,
     onSettled,
     fallbackErrorMessage: "Failed to update entry",
+  });
+}
+
+type DeleteDiaryEntryActionParams = DiaryActionCallbacks & {
+  entryId: string;
+  onDeleted: (entryId: string) => void;
+};
+
+export async function deleteDiaryEntryAction({
+  entryId,
+  onDeleted,
+  onSuccess,
+  onError,
+  onSettled,
+}: DeleteDiaryEntryActionParams): Promise<void> {
+  await executeAction({
+    run: () => deleteDiaryEntry(entryId),
+    onResolved: (result) => onDeleted(result.id),
+    onSuccess,
+    onError,
+    onSettled,
+    fallbackErrorMessage: "Failed to delete entry",
   });
 }

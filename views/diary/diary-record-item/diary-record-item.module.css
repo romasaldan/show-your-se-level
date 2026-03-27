@@ -21,6 +21,7 @@
 
 .actions {
   display: flex;
+  gap: 0.35rem;
   justify-content: flex-end;
   padding-top: 0.25rem;
 }
@@ -30,6 +31,16 @@
   padding: 0.35rem 0.8rem;
 }
 
+.deleteButton {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.8rem;
+  color: #b91c1c;
+}
+
 :global(.dark) .entryDate {
   color: rgba(255, 255, 255, 0.7);
+}
+
+:global(.dark) .deleteButton {
+  color: #fca5a5;
 }
