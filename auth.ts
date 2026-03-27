@@ -36,7 +36,7 @@ export const authOptions: NextAuthOptions = {
 
       const githubProfile = profile as GitHubProfile;
 
-      await prisma.user.upsert({
+      const user = await prisma.user.upsert({
         where: {
           githubId: githubProfile.id,
         },
@@ -61,7 +61,41 @@ export const authOptions: NextAuthOptions = {
         },
       });
 
+      await prisma.project.upsert({
+        where: {
+          userId_name: { userId: user.id, name: "General" },
+        },
+        update: {},
+        create: {
+          userId: user.id,
+          name: "General",
+          kind: "general",
+          isDefault: true,
+        },
+      });
+
       return true;
+    },
+
+    async session({ session, token }) {
+      if (token.sub && session.user) {
+        const dbUser = await prisma.user.findUnique({
+          where: { githubId: Number(token.sub) },
+          select: { id: true },
+        });
+        if (dbUser) {
+          session.user.id = dbUser.id;
+        }
+      }
+      return session;
+    },
+
+    async jwt({ token, profile }) {
+      if (profile) {
+        const githubProfile = profile as GitHubProfile;
+        token.sub = String(githubProfile.id);
+      }
+      return token;
     },
   },
   secret: process.env["AUTH_SECRET"] ?? process.env["NEXTAUTH_SECRET"],

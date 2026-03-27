@@ -14,7 +14,8 @@
 
 .entryDetails,
 .entrySkills,
-.entryImportance {
+.entryImportance,
+.entryProject {
   line-height: 1.4;
 }
 

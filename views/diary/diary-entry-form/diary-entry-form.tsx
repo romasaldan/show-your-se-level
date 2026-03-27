@@ -1,6 +1,5 @@
 "use client";
-import { useMemo } from "react";
-import type { DiaryEntryDraft, ImportanceLevel } from "../diary-entry.types";
+import type { DiaryEntryDraft, ImportanceLevel, ProjectOption } from "../diary-entry.types";
 import { t } from "@/i18n/t";
 import type { AppLocale } from "@/i18n/config";
 import styles from "./diary-entry-form.module.css";
@@ -19,11 +18,14 @@ type DiaryEntryFormProps = {
   locale: AppLocale;
   mode: "create" | "edit";
   initialValues: DiaryEntryDraft;
+  projects: ProjectOption[];
+  skills: string[];
   onCancel: () => void;
   onSubmit: (draft: DiaryEntryDraft) => void;
 };
 
 type DiaryEntryFormValues = {
+  projectId: string;
   date: string;
   title: string;
   details: string;
@@ -38,19 +40,12 @@ function parseSkills(value: string) {
     .filter(Boolean);
 }
 
-const SKILL_OPTIONS = [
-  { value: "React", label: "React" },
-  { value: "Product thinking", label: "Product thinking" },
-  { value: "SQL", label: "SQL" },
-  { value: "Performance optimization", label: "Performance optimization" },
-  { value: "API design", label: "API design" },
-  { value: "Technical writing", label: "Technical writing" },
-];
-
 export function DiaryEntryForm({
   locale,
   mode,
   initialValues,
+  projects,
+  skills,
   onCancel,
   onSubmit,
 }: DiaryEntryFormProps) {
@@ -59,6 +54,7 @@ export function DiaryEntryForm({
   const methods = useForm<DiaryEntryFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      projectId: initialValues.projectId,
       date: initialValues.date,
       title: initialValues.title,
       details: initialValues.details,
@@ -76,13 +72,15 @@ export function DiaryEntryForm({
   const importanceLabel = (level: ImportanceLevel) =>
     t(locale, `page.diary.importance.${level}`);
 
-  const skillOptions = useMemo(() => {
-    const baseValues = new Set(SKILL_OPTIONS.map((o) => o.value));
-    const extras = selectedSkills
-      .filter((v) => !baseValues.has(v))
-      .map((v) => ({ value: v, label: v }));
-    return [...SKILL_OPTIONS, ...extras];
-  }, [selectedSkills]);
+  const baseSkillValues = new Set(skills);
+  const skillOptions = [
+    ...skills.map((name) => ({ value: name, label: name })),
+    ...selectedSkills
+      .filter((v) => !baseSkillValues.has(v))
+      .map((v) => ({ value: v, label: v })),
+  ];
+
+  const projectOptions = projects.map((p) => ({ value: p.id, label: p.name }));
 
   return (
     <FormProvider {...methods}>
@@ -90,6 +88,7 @@ export function DiaryEntryForm({
         className={styles.form}
         onSubmit={methods.handleSubmit((data) => {
           const draft: DiaryEntryDraft = {
+            projectId: data.projectId,
             date: data.date.trim(),
             title: data.title.trim(),
             details: data.details.trim(),
@@ -99,6 +98,19 @@ export function DiaryEntryForm({
           onSubmit(draft);
         })}
       >
+        <RhfControllerField
+          name="projectId"
+          label={t(locale, "page.diary.form.fields.project")}
+          render={(field) => (
+            <Select
+              label={t(locale, "page.diary.form.fields.project")}
+              options={projectOptions}
+              value={field.value as string}
+              onChange={field.onChange}
+            />
+          )}
+        />
+
         <RhfControllerField
           name="date"
           label={t(locale, "page.diary.form.fields.date")}

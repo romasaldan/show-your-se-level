@@ -3,73 +3,58 @@
 import styles from "./diary-view.module.css";
 
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 import type { AppLocale } from "@/i18n/config";
 import { t } from "@/i18n/t";
+import {
+  createDiaryEntryAction,
+  updateDiaryEntryAction,
+} from "@/shared/api/diary";
 import { Button } from "@/shared/components/button/button";
 import { DiaryRecordItem } from "./diary-record-item/diary-record-item";
 import type {
   DiaryEntry,
   DiaryEntryDraft,
   ImportanceLevel,
+  ProjectOption,
 } from "./diary-entry.types";
+
 import { DiaryEntryFormModal } from "./diary-entry-form-modal/diary-entry-form-modal";
 
 export function DiaryView({
   label,
   locale,
+  initialEntries,
+  projects,
+  skills,
 }: {
   label: string;
   locale: AppLocale;
+  initialEntries: DiaryEntry[];
+  projects: ProjectOption[];
+  skills: string[];
 }) {
   const title = t(locale, "page.diary.title");
   const subtitle = t(locale, "page.diary.subtitle", { label });
   const addEntryLabel = t(locale, "page.diary.addEntry");
   const entriesHeading = t(locale, "page.diary.entriesHeading");
-
-  const initialEntries: DiaryEntry[] = useMemo(
-    () => [
-      {
-        id: "entry-1",
-        date: t(locale, "page.diary.entry1.date"),
-        title: t(locale, "page.diary.entry1.title"),
-        details: t(locale, "page.diary.entry1.details"),
-        skills: t(locale, "page.diary.entry1.skills"),
-        importance: "high" satisfies ImportanceLevel,
-      },
-      {
-        id: "entry-2",
-        date: t(locale, "page.diary.entry2.date"),
-        title: t(locale, "page.diary.entry2.title"),
-        details: t(locale, "page.diary.entry2.details"),
-        skills: t(locale, "page.diary.entry2.skills"),
-        importance: "medium" satisfies ImportanceLevel,
-      },
-      {
-        id: "entry-3",
-        date: t(locale, "page.diary.entry3.date"),
-        title: t(locale, "page.diary.entry3.title"),
-        details: t(locale, "page.diary.entry3.details"),
-        skills: t(locale, "page.diary.entry3.skills"),
-        importance: "high" satisfies ImportanceLevel,
-      },
-    ],
-    [locale],
-  );
+  const saveErrorLabel = t(locale, "page.diary.toast.saveFailed");
 
   const [entries, setEntries] = useState<DiaryEntry[]>(initialEntries);
   const [isEntryModalOpen, setIsEntryModalOpen] = useState(false);
   const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const defaultDraft: DiaryEntryDraft = useMemo(
-    () => ({
-      date: "",
-      title: "",
-      details: "",
-      skills: "",
-      importance: "medium" satisfies ImportanceLevel,
-    }),
-    [],
-  );
+  const defaultProject = projects.find((p) => p.isDefault) ?? projects[0];
+
+  const defaultDraft: DiaryEntryDraft = {
+    projectId: defaultProject?.id ?? "",
+    date: "",
+    title: "",
+    details: "",
+    skills: "",
+    importance: "medium" satisfies ImportanceLevel,
+  };
 
   const editingEntry = useMemo(
     () => (editingEntryId ? entries.find((e) => e.id === editingEntryId) : null),
@@ -80,6 +65,7 @@ export function DiaryView({
 
   const modalInitialValues: DiaryEntryDraft = editingEntry
     ? {
+        projectId: editingEntry.projectId,
         date: editingEntry.date,
         title: editingEntry.title,
         details: editingEntry.details,
@@ -103,21 +89,28 @@ export function DiaryView({
     setIsEntryModalOpen(true);
   };
 
-  const onSaveDraft = (draft: DiaryEntryDraft) => {
+  const onSaveDraft = async (draft: DiaryEntryDraft) => {
+    setIsSaving(true);
     if (editingEntryId) {
-      setEntries((prev) =>
-        prev.map((e) =>
-          e.id === editingEntryId ? { ...e, ...draft } : e,
-        ),
-      );
-    } else {
-      const newId =
-        typeof crypto !== "undefined" && "randomUUID" in crypto
-          ? crypto.randomUUID()
-          : `entry-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-      setEntries((prev) => [{ id: newId, ...draft }, ...prev]);
+      await updateDiaryEntryAction({
+        entryId: editingEntryId,
+        draft,
+        onUpdated: (updated) =>
+          setEntries((prev) => prev.map((e) => (e.id === updated.id ? updated : e))),
+        onSuccess: closeModal,
+        onError: (message) => toast.error(message || saveErrorLabel),
+        onSettled: () => setIsSaving(false),
+      });
+      return;
     }
-    closeModal();
+
+    await createDiaryEntryAction({
+      draft,
+      onCreated: (created) => setEntries((prev) => [created, ...prev]),
+      onSuccess: closeModal,
+      onError: (message) => toast.error(message || saveErrorLabel),
+      onSettled: () => setIsSaving(false),
+    });
   };
 
   return (
@@ -135,6 +128,7 @@ export function DiaryView({
         type="button"
         onClick={openCreateModal}
         className={styles.addEntryButton}
+        disabled={isSaving}
       >
         {addEntryLabel}
       </Button>
@@ -161,6 +155,8 @@ export function DiaryView({
         locale={locale}
         mode={modalMode}
         initialValues={modalInitialValues}
+        projects={projects}
+        skills={skills}
         onClose={closeModal}
         onSave={onSaveDraft}
       />

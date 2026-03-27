@@ -4,6 +4,9 @@ import type { AppLocale } from "@/i18n/config";
 
 export function createDiaryEntryFormSchema(locale: AppLocale) {
   return z.object({
+    projectId: z
+      .string()
+      .min(1, t(locale, "page.diary.form.errors.projectRequired")),
     date: z.string(),
     title: z
       .string()
@@ -17,4 +20,3 @@ export function createDiaryEntryFormSchema(locale: AppLocale) {
     importance: z.enum(["low", "medium", "high"]),
   });
 }
-

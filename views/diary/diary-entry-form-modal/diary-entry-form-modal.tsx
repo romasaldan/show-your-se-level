@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import type { AppLocale } from "@/i18n/config";
 import { t } from "@/i18n/t";
-import type { DiaryEntryDraft } from "../diary-entry.types";
+import type { DiaryEntryDraft, ProjectOption } from "../diary-entry.types";
 import { ModalWithDrawer } from "@/shared/components/modal-with-drawer/modal-with-drawer";
 import { DiaryEntryForm } from "../diary-entry-form/diary-entry-form";
 
@@ -11,6 +11,8 @@ type DiaryEntryFormModalProps = {
   locale: AppLocale;
   mode: "create" | "edit";
   initialValues: DiaryEntryDraft;
+  projects: ProjectOption[];
+  skills: string[];
   onClose: () => void;
   onSave: (draft: DiaryEntryDraft) => void;
 };
@@ -20,6 +22,8 @@ export function DiaryEntryFormModal({
   locale,
   mode,
   initialValues,
+  projects,
+  skills,
   onClose,
   onSave,
 }: DiaryEntryFormModalProps) {
@@ -41,14 +45,15 @@ export function DiaryEntryFormModal({
   return (
     <ModalWithDrawer open={open} title={title} onClose={onClose}>
       <DiaryEntryForm
-        key={`${mode}-${initialValues.date}-${initialValues.title}-${initialValues.details}-${initialValues.skills}-${initialValues.importance}`}
+        key={`${mode}-${initialValues.date}-${initialValues.title}-${initialValues.details}-${initialValues.skills}-${initialValues.importance}-${initialValues.projectId}`}
         locale={locale}
         mode={mode}
         initialValues={initialValues}
+        projects={projects}
+        skills={skills}
         onCancel={onClose}
         onSubmit={onSave}
       />
     </ModalWithDrawer>
   );
 }
-

@@ -7,11 +7,30 @@ import { authOptions } from "@/auth";
 import { DiaryView } from "@/views/diary/diary-view";
 import { defaultLocale, isAppLocale, type AppLocale } from "@/i18n/config";
 import { t } from "@/i18n/t";
+import {
+  listEntriesByUserId,
+  listProjectsByUserId,
+  listSkills,
+} from "@/lib/diary-repository";
 
 type DiaryPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-export default function DiaryPage({ label, locale }: DiaryPageProps) {
-  return <DiaryView label={label} locale={locale as AppLocale} />;
+export default function DiaryPage({
+  label,
+  locale,
+  initialEntries,
+  projects,
+  skills,
+}: DiaryPageProps) {
+  return (
+    <DiaryView
+      label={label}
+      locale={locale as AppLocale}
+      initialEntries={initialEntries}
+      projects={projects}
+      skills={skills}
+    />
+  );
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -24,7 +43,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     authOptions,
   );
 
-  if (!session?.user) {
+  if (!session?.user?.id) {
     return {
       redirect: {
         destination: `/${locale}/auth`,
@@ -33,11 +52,24 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 
+  const userId = session.user.id;
+
+  const [initialEntries, projects, skills] = await Promise.all([
+    listEntriesByUserId(userId),
+    listProjectsByUserId(userId),
+    listSkills(),
+  ]);
+
   return {
     props: {
-      label: session.user.name ?? session.user.email ?? t(locale, "common.signedInUser"),
+      label:
+        session.user.name ??
+        session.user.email ??
+        t(locale, "common.signedInUser"),
       locale,
+      initialEntries,
+      projects,
+      skills,
     },
   };
 }
-
