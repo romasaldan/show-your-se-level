@@ -1,22 +1,26 @@
 ## Show Your SE Level
 
-Daily achievement diary for developers, built with Next.js.
+Show Your SE Level is a daily achievement diary for developers.
 
-## Getting Started
+The app helps users record what they shipped or learned each day and link those achievements to the skills they improved. Over time, this creates a profile timeline and project-focused growth history that can be filtered (for example, by skill) and later consumed by external tools, such as CV builders, through API endpoints.
 
-1. Copy environment variables:
+Built with Next.js.
+
+## Run Locally
+
+### 1) Copy environment variables
 
 ```bash
 cp .env.example .env.local
 ```
 
-2. Start PostgreSQL with Docker:
+### 2) Start PostgreSQL (Docker)
 
 ```bash
 npm run db:up
 ```
 
-3. Start the app:
+### 3) Start the app
 
 ```bash
 npm run dev
@@ -28,13 +32,13 @@ Open [http://localhost:3000](http://localhost:3000).
 
 The project includes a local PostgreSQL database in `docker-compose.yml`.
 
-### Scripts
+### Database scripts
 
-- `npm run db:up` - starts the PostgreSQL container in the background
-- `npm run db:down` - stops containers and removes the network
-- `npm run db:logs` - tails PostgreSQL logs
+- `npm run db:up` - start the PostgreSQL container in the background
+- `npm run db:down` - stop containers and remove the network
+- `npm run db:logs` - tail PostgreSQL logs
 
-### Default Connection
+### Default connection values
 
 With the default `.env.example` values:
 
