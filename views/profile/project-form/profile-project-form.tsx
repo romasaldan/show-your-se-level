@@ -17,6 +17,7 @@ type ProfileProjectFormProps = {
   locale: AppLocale;
   mode: "create" | "edit";
   initialValues: ProjectDraft;
+  lockCoreFields?: boolean;
   skillOptions: string[];
   onCancel: () => void;
   onSubmit: (draft: ProjectDraft) => void;
@@ -32,6 +33,7 @@ export function ProfileProjectForm({
   locale,
   mode,
   initialValues,
+  lockCoreFields = false,
   skillOptions,
   onCancel,
   onSubmit,
@@ -62,6 +64,7 @@ export function ProfileProjectForm({
           name="name"
           label={t(locale, "page.profile.projects.form.fields.name")}
           inputProps={{
+            disabled: lockCoreFields,
             placeholder:
               mode === "create"
                 ? t(locale, "page.profile.projects.form.placeholders.nameCreate")
@@ -75,6 +78,7 @@ export function ProfileProjectForm({
           render={(field) => (
             <Select
               label={t(locale, "page.profile.projects.form.fields.kind")}
+              disabled={lockCoreFields}
               options={[
                 {
                   value: "company",

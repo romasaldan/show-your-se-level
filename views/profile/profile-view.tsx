@@ -55,6 +55,9 @@ export function ProfileView({
   const editingProject = findById(projects, editingProjectId);
 
   const modalMode: "create" | "edit" = editingProject ? "edit" : "create";
+  const lockCoreFields =
+    editingProject != null &&
+    (editingProject.isDefault || editingProject.kind === "general");
 
   const modalInitialValues: ProjectDraft = editingProject
     ? {
@@ -116,6 +119,7 @@ export function ProfileView({
         locale={locale}
         mode={modalMode}
         initialValues={modalInitialValues}
+        lockCoreFields={lockCoreFields}
         skillOptions={projectSkillOptions}
         onClose={closeModal}
         onSave={onSaveProject}

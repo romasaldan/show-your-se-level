@@ -12,6 +12,7 @@ type ProfileProjectFormModalProps = {
   locale: AppLocale;
   mode: "create" | "edit";
   initialValues: ProjectDraft;
+  lockCoreFields?: boolean;
   skillOptions: string[];
   onClose: () => void;
   onSave: (draft: ProjectDraft) => void;
@@ -22,6 +23,7 @@ export function ProfileProjectFormModal({
   locale,
   mode,
   initialValues,
+  lockCoreFields = false,
   skillOptions,
   onClose,
   onSave,
@@ -48,6 +50,7 @@ export function ProfileProjectFormModal({
         locale={locale}
         mode={mode}
         initialValues={initialValues}
+        lockCoreFields={lockCoreFields}
         skillOptions={skillOptions}
         onCancel={onClose}
         onSubmit={onSave}

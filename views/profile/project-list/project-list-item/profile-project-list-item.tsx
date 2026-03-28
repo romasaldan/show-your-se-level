@@ -25,7 +25,7 @@ export function ProfileProjectListItem({
   onEditProject,
   onDeleteProject,
 }: ProfileProjectListItemProps) {
-  const isImmutable = project.isDefault || project.kind === "general";
+  const isPartiallyEditable = project.isDefault || project.kind === "general";
 
   return (
     <li
@@ -46,29 +46,23 @@ export function ProfileProjectListItem({
       </div>
 
       <div className={styles.projectActions}>
-        {!isImmutable ? (
-          <>
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => onEditProject(project.id)}
-              disabled={isSaving || deletingProjectId === project.id}
-            >
-              {t(locale, "page.profile.projects.actions.edit")}
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => onDeleteProject(project)}
-              disabled={isSaving || deletingProjectId === project.id}
-            >
-              {t(locale, "page.profile.projects.actions.delete")}
-            </Button>
-          </>
-        ) : (
-          <p className={styles.projectImmutableNote}>
-            {t(locale, "page.profile.projects.generalLock")}
-          </p>
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={() => onEditProject(project.id)}
+          disabled={isSaving || deletingProjectId === project.id}
+        >
+          {t(locale, "page.profile.projects.actions.edit")}
+        </Button>
+        {!isPartiallyEditable && (
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => onDeleteProject(project)}
+            disabled={isSaving || deletingProjectId === project.id}
+          >
+            {t(locale, "page.profile.projects.actions.delete")}
+          </Button>
         )}
       </div>
     </li>

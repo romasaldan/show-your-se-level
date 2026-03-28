@@ -90,16 +90,19 @@ export async function updateProject(
   draft: ProjectDraft,
 ): Promise<ProfileProject> {
   const normalized = normalizeProjectDraft(draft);
-  await assertProjectMutable(userId, projectId);
-
-  const project = await prisma.project.update({
-    where: { id: projectId },
-    data: {
-      name: normalized.name,
-      kind: normalized.kind,
-    },
-    select: { id: true, name: true, kind: true, isDefault: true },
-  });
+  const existingProject = await getOwnedProject(userId, projectId);
+  const canEditCoreFields =
+    !existingProject.isDefault && existingProject.kind !== "general";
+  const project = canEditCoreFields
+    ? await prisma.project.update({
+        where: { id: projectId },
+        data: {
+          name: normalized.name,
+          kind: normalized.kind,
+        },
+        select: { id: true, name: true, kind: true, isDefault: true },
+      })
+    : existingProject;
 
   await replaceProjectSkills(project.id, normalized.skillNames);
 
@@ -110,7 +113,7 @@ export async function updateProject(
 }
 
 export async function deleteProject(userId: string, projectId: string): Promise<void> {
-  await assertProjectMutable(userId, projectId);
+  await assertProjectDeletable(userId, projectId);
 
   try {
     await prisma.project.delete({
@@ -164,19 +167,30 @@ export async function listAvailableSkills(): Promise<string[]> {
   return skills.map((skill) => skill.name);
 }
 
-async function assertProjectMutable(userId: string, projectId: string): Promise<void> {
+async function assertProjectDeletable(userId: string, projectId: string): Promise<void> {
+  const existing = await getOwnedProject(userId, projectId);
+
+  if (existing.isDefault || existing.kind === "general") {
+    throw new DefaultProjectMutationError("General project cannot be modified");
+  }
+}
+
+async function getOwnedProject(userId: string, projectId: string) {
   const existing = await prisma.project.findUnique({
     where: { id: projectId },
-    select: { userId: true, kind: true, isDefault: true },
+    select: { id: true, userId: true, name: true, kind: true, isDefault: true },
   });
 
   if (!existing || existing.userId !== userId) {
     throw new ProjectAccessError("Project not found or access denied");
   }
 
-  if (existing.isDefault || existing.kind === "general") {
-    throw new DefaultProjectMutationError("General project cannot be modified");
-  }
+  return {
+    id: existing.id,
+    name: existing.name,
+    kind: existing.kind,
+    isDefault: existing.isDefault,
+  };
 }
 
 function normalizeProjectDraft(draft: ProjectDraft): ProjectDraft {

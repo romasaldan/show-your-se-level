@@ -15,9 +15,10 @@ type SelectProps = {
   value: string;
   onChange: (value: string) => void;
   label?: string;
+  disabled?: boolean;
 };
 
-export function Select({ options, value, onChange, label }: SelectProps) {
+export function Select({ options, value, onChange, label, disabled }: SelectProps) {
   const normalizedValue = value == null ? "" : String(value);
   const selectedOption = options.find((o) => o.value === normalizedValue);
 
@@ -27,6 +28,7 @@ export function Select({ options, value, onChange, label }: SelectProps) {
 
       <ShadcnSelect
         value={normalizedValue}
+        disabled={disabled}
         onValueChange={(nextValue) => {
           if (nextValue == null) return;
           onChange(String(nextValue));

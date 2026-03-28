@@ -66,7 +66,7 @@ function handleError(
     return res.status(404).json({ error: "Project not found or access denied" });
   }
   if (error instanceof DefaultProjectMutationError) {
-    return res.status(403).json({ error: "General project cannot be edited or deleted" });
+    return res.status(403).json({ error: "General project cannot be deleted" });
   }
   if (error instanceof ProjectHasAchievementsError) {
     return res.status(409).json({ error: "Project has diary entries and cannot be deleted" });

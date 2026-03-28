@@ -36,9 +36,10 @@ export const MESSAGES: Record<AppLocale, Messages> = {
     "page.profile.projects.skills.empty": "No skills assigned",
     "page.profile.projects.actions.edit": "Edit",
     "page.profile.projects.actions.delete": "Delete",
-    "page.profile.projects.generalLock": "General project cannot be changed.",
+    "page.profile.projects.generalLock":
+      "General project core fields are locked. You can still update skills.",
     "page.profile.projects.errors.generalImmutable":
-      "General project cannot be edited or deleted",
+      "General project cannot be deleted",
 
     "page.profile.projects.form.title.create": "Create project",
     "page.profile.projects.form.title.edit": "Edit project",
@@ -200,9 +201,10 @@ export const MESSAGES: Record<AppLocale, Messages> = {
     "page.profile.projects.skills.empty": "Навички не вказані",
     "page.profile.projects.actions.edit": "Редагувати",
     "page.profile.projects.actions.delete": "Видалити",
-    "page.profile.projects.generalLock": "Загальний проєкт не можна змінювати.",
+    "page.profile.projects.generalLock":
+      "Основні поля загального проєкту заблоковані. Ви все ще можете оновлювати навички.",
     "page.profile.projects.errors.generalImmutable":
-      "Загальний проєкт не можна редагувати або видаляти",
+      "Загальний проєкт не можна видалити",
 
     "page.profile.projects.form.title.create": "Створити проєкт",
     "page.profile.projects.form.title.edit": "Редагувати проєкт",
