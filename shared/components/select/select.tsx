@@ -18,23 +18,24 @@ type SelectProps = {
 };
 
 export function Select({ options, value, onChange, label }: SelectProps) {
-  const selectedOption = options.find((o) => o.value === value);
+  const normalizedValue = value == null ? "" : String(value);
+  const selectedOption = options.find((o) => o.value === normalizedValue);
 
   return (
     <div className="w-full">
       {label ? <div className="sr-only">{label}</div> : null}
 
       <ShadcnSelect
-        value={value}
+        value={normalizedValue}
         onValueChange={(nextValue) => {
           if (nextValue == null) return;
           onChange(String(nextValue));
         }}
       >
         <SelectTrigger className="w-full">
-          <SelectValue
-            placeholder={selectedOption?.label ?? value}
-          />
+          <SelectValue placeholder="Select...">
+            {selectedOption?.label ?? null}
+          </SelectValue>
         </SelectTrigger>
 
         <SelectContent>

@@ -39,6 +39,7 @@ export function Combobox({
 }: ComboboxProps) {
   const [inputValue, setInputValue] = useState("");
   const anchorRef = useComboboxAnchor();
+  const normalizedValues = values.map((value) => String(value));
   const normalizedOptionValues = useMemo(
     () => new Set(options.map((opt) => opt.value.trim().toLowerCase())),
     [options],
@@ -68,15 +69,15 @@ export function Combobox({
       <ShadcnCombobox
         multiple
         items={items}
-        value={values}
+        value={normalizedValues}
         onValueChange={onChange}
         onInputValueChange={setInputValue}
       >
         <ComboboxChips ref={anchorRef}>
           <ComboboxValue>
-            {values.map((v) => (
+            {normalizedValues.map((v) => (
               <ComboboxChip key={v}>
-                {optionLabelByValue.get(v) ?? v}
+                {optionLabelByValue.get(v) ?? (allowCreate ? v : "")}
               </ComboboxChip>
             ))}
           </ComboboxValue>
@@ -101,7 +102,7 @@ export function Combobox({
           <ComboboxList>
             {(item) => (
               <ComboboxItem key={item} value={item}>
-                {optionLabelByValue.get(item) ?? item}
+                {optionLabelByValue.get(item) ?? (allowCreate ? item : "")}
               </ComboboxItem>
             )}
           </ComboboxList>
