@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { parseSkillNames, toAchievementSkillConnections, toEntry } from "@/lib/diary-repository.utils";
 import { prisma } from "@/lib/prisma";
+import { normalizeProjectDateFromDb } from "@/lib/profile-repository.utils";
 import type {
   DiaryEntry,
   DiaryEntryDraft,
@@ -177,7 +178,14 @@ export async function listProjectsByUserId(userId: string): Promise<ProjectOptio
   const projects = await prisma.project.findMany({
     where: { userId },
     orderBy: [{ isDefault: "desc" }, { name: "asc" }],
-    select: { id: true, name: true, kind: true, isDefault: true },
+    select: {
+      id: true,
+      name: true,
+      kind: true,
+      isDefault: true,
+      startDate: true,
+      endDate: true,
+    },
   });
 
   return projects.map((p) => ({
@@ -185,6 +193,8 @@ export async function listProjectsByUserId(userId: string): Promise<ProjectOptio
     name: p.name,
     kind: p.kind,
     isDefault: p.isDefault,
+    startDate: normalizeProjectDateFromDb(p.startDate),
+    endDate: normalizeProjectDateFromDb(p.endDate),
   }));
 }
 

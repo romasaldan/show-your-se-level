@@ -4,3 +4,9 @@
   gap: 1rem;
 }
 
+.warning {
+  margin: -0.5rem 0 0;
+  font-size: 0.875rem;
+  color: #92400e;
+}
+

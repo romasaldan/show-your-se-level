@@ -1,7 +1,10 @@
 "use client";
-import type { DiaryEntryDraft, ImportanceLevel, ProjectOption } from "../diary-entry.types";
+import type {
+  DiaryEntryDraft,
+  ImportanceLevel,
+  ProjectOption,
+} from "../diary-entry.types";
 import { t } from "@/i18n/t";
-import type { AppLocale } from "@/i18n/config";
 import styles from "./diary-entry-form.module.css";
 import { FormActions } from "@/shared/components/form-actions/form-actions";
 import { Select } from "@/shared/components/select/select";
@@ -13,6 +16,9 @@ import { RhfTextareaField } from "@/shared/forms/rhf-textarea-field";
 import { RhfControllerField } from "@/shared/forms/rhf-controller-field";
 import { DatePicker } from "@/shared/components/date-picker/date-picker";
 import { createDiaryEntryFormSchema } from "./diary-entry-form.schema";
+import { getProjectDateWarning } from "./diary-entry-form.utils";
+import { useWatch } from "react-hook-form";
+import { AppLocale } from "@/i18n/config";
 
 type DiaryEntryFormProps = {
   locale: AppLocale;
@@ -62,11 +68,24 @@ export function DiaryEntryForm({
       importance: initialValues.importance,
     },
   });
+  const selectedProjectId = useWatch({
+    control: methods.control,
+    name: "projectId",
+  });
+  const selectedDate = useWatch({ control: methods.control, name: "date" });
 
   const importanceLabel = (level: ImportanceLevel) =>
     t(locale, `page.diary.importance.${level}`);
 
   const projectOptions = projects.map((p) => ({ value: p.id, label: p.name }));
+  const selectedProject =
+    projects.find((project) => project.id === selectedProjectId) ?? null;
+
+  const projectDateWarning = getProjectDateWarning({
+    locale,
+    date: selectedDate,
+    project: selectedProject,
+  });
 
   return (
     <FormProvider {...methods}>
@@ -109,6 +128,11 @@ export function DiaryEntryForm({
             />
           )}
         />
+        {projectDateWarning && (
+          <p className={styles.warning} role="status" aria-live="polite">
+            {projectDateWarning}
+          </p>
+        )}
 
         <RhfInputField
           name="title"

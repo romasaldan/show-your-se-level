@@ -7,6 +7,8 @@ export type ProjectOption = {
   name: string;
   kind: ProjectKind;
   isDefault: boolean;
+  startDate: number | null;
+  endDate: number | null;
 };
 
 export type DiaryEntry = {

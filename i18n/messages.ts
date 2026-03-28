@@ -103,6 +103,10 @@ export const MESSAGES: Record<AppLocale, Messages> = {
     "page.diary.form.errors.titleRequired": "Title is required",
     "page.diary.form.errors.detailsRequired": "Details are required",
     "page.diary.form.errors.projectRequired": "Project is required",
+    "page.diary.form.warnings.beforeProjectStart":
+      "Selected date is earlier than project start date ({startDate}).",
+    "page.diary.form.warnings.afterProjectEnd":
+      "Selected date is later than project end date ({endDate}).",
     "page.diary.form.placeholders.titleCreate": "What did you achieve?",
     "page.diary.form.placeholders.titleEdit": "Update the title",
     "page.diary.form.placeholders.details": "Short description of what happened",
@@ -279,6 +283,10 @@ export const MESSAGES: Record<AppLocale, Messages> = {
     "page.diary.form.errors.titleRequired": "Заголовок є обов'язковим",
     "page.diary.form.errors.detailsRequired": "Деталі є обов'язковими",
     "page.diary.form.errors.projectRequired": "Проєкт є обов'язковим",
+    "page.diary.form.warnings.beforeProjectStart":
+      "Обрана дата раніше за дату початку проєкту ({startDate}).",
+    "page.diary.form.warnings.afterProjectEnd":
+      "Обрана дата пізніше за дату завершення проєкту ({endDate}).",
     "page.diary.form.placeholders.titleCreate": "Якого результату ви досягли?",
     "page.diary.form.placeholders.titleEdit": "Оновіть заголовок",
     "page.diary.form.placeholders.details": "Коротко опишіть, що сталося",
