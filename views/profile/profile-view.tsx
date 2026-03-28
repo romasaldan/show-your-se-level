@@ -5,6 +5,7 @@ import type { AppLocale } from "@/i18n/config";
 import { t } from "@/i18n/t";
 import { useEditModalState } from "@/shared/hooks/use-edit-modal-state";
 import { findById } from "@/shared/utils/find-by-id";
+import { sortStrings } from "@/shared/utils/sort-strings";
 import { ProfileIdentitySection } from "./identity-section/profile-identity-section";
 import { useProfileProjectActions } from "./hooks/use-profile-project-actions";
 import { ProfileProjectFormModal } from "./project-modal/profile-project-form-modal";
@@ -65,13 +66,9 @@ export function ProfileView({
         skillNames: [],
       };
 
-  const projectSkillOptions = [...availableSkills].sort((a, b) =>
-    a.localeCompare(b),
-  );
+  const projectSkillOptions = sortStrings(availableSkills);
 
-  const sortedEncounteredSkills = [...encounteredSkills].sort((a, b) =>
-    a.localeCompare(b),
-  );
+  const sortedEncounteredSkills = sortStrings(encounteredSkills);
 
   const { isSaving, deletingProjectId, onSaveProject, onDeleteProject } =
     useProfileProjectActions({

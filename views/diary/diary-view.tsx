@@ -2,22 +2,37 @@
 
 import styles from "./diary-view.module.css";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { AppLocale } from "@/i18n/config";
-import { t } from "@/i18n/t";
 import { useEditModalState } from "@/shared/hooks/use-edit-modal-state";
 import { findById } from "@/shared/utils/find-by-id";
 import { Button } from "@/shared/components/button/button";
+import { toast } from "sonner";
+import { FormProvider, useForm } from "react-hook-form";
+import { listDiaryEntriesAction } from "@/shared/api/diary";
 import { useDiaryEntryActions } from "./hooks/use-diary-entry-actions";
+import { useDiaryViewLabels } from "./hooks/use-diary-view-labels";
+import {
+  DiaryFilters,
+  type DiaryFiltersFormValues,
+} from "./diary-filters/diary-filters";
 import { DiaryRecordItem } from "./diary-record-item/diary-record-item";
 import type {
   DiaryEntry,
+  DiaryEntriesFilter,
   DiaryEntryDraft,
   ImportanceLevel,
   ProjectOption,
 } from "./diary-entry.types";
 
 import { DiaryEntryFormModal } from "./diary-entry-form-modal/diary-entry-form-modal";
+
+const defaultFilterValues: DiaryFiltersFormValues = {
+  projectId: null,
+  skills: [],
+  fromDate: "",
+  toDate: "",
+};
 
 export function DiaryView({
   label,
@@ -32,15 +47,23 @@ export function DiaryView({
   projects: ProjectOption[];
   skills: string[];
 }) {
-  const title = t(locale, "page.diary.title");
-  const subtitle = t(locale, "page.diary.subtitle", { label });
-  const addEntryLabel = t(locale, "page.diary.addEntry");
-  const entriesHeading = t(locale, "page.diary.entriesHeading");
-  const saveErrorLabel = t(locale, "page.diary.toast.saveFailed");
-  const deleteErrorLabel = t(locale, "page.diary.toast.deleteFailed");
-  const deleteConfirmLabel = t(locale, "page.diary.confirm.delete");
+  const {
+    title,
+    subtitle,
+    addEntryLabel,
+    entriesHeading,
+    noEntriesLabel,
+    loadErrorLabel,
+    saveErrorLabel,
+    deleteErrorLabel,
+    deleteConfirmLabel,
+  } = useDiaryViewLabels({ locale, label });
 
   const [entries, setEntries] = useState<DiaryEntry[]>(initialEntries);
+  const filterMethods = useForm<DiaryFiltersFormValues>({
+    defaultValues: defaultFilterValues,
+  });
+
   const {
     isModalOpen: isEntryModalOpen,
     editingId: editingEntryId,
@@ -75,14 +98,37 @@ export function DiaryView({
       }
     : defaultDraft;
 
+  const fetchEntries = useCallback(async (filters: DiaryEntriesFilter) => {
+    await listDiaryEntriesAction({
+      filters,
+      onListed: setEntries,
+      onError: (message) => toast.error(message || loadErrorLabel),
+    });
+  }, [loadErrorLabel]);
+
+  const refreshEntries = useCallback(async () => {
+    const appliedFormValues =
+      (filterMethods.formState.defaultValues as DiaryFiltersFormValues | undefined) ??
+      defaultFilterValues;
+    await fetchEntries(appliedFormValues);
+  }, [fetchEntries, filterMethods.formState.defaultValues]);
+
   const { isSaving, onSaveDraft, onDeleteEntry } = useDiaryEntryActions({
     editingEntryId,
     closeModal,
     saveErrorLabel,
     deleteErrorLabel,
     deleteConfirmLabel,
-    setEntries,
+    refreshEntries,
   });
+
+  const onChangeFilters = useCallback(
+    async (nextFilters: DiaryEntriesFilter) => {
+      filterMethods.reset(nextFilters);
+      await fetchEntries(nextFilters);
+    },
+    [fetchEntries, filterMethods],
+  );
 
   return (
     <div className={styles.root}>
@@ -90,9 +136,7 @@ export function DiaryView({
         <h1 id="diary-title" className={styles.title}>
           {title}
         </h1>
-        <p className={styles.subtitle}>
-          {subtitle}
-        </p>
+        <p className={styles.subtitle}>{subtitle}</p>
       </section>
 
       <Button
@@ -104,21 +148,34 @@ export function DiaryView({
         {addEntryLabel}
       </Button>
 
+      <FormProvider {...filterMethods}>
+        <DiaryFilters
+          locale={locale}
+          projects={projects}
+          skills={skills}
+          onChangeFilters={onChangeFilters}
+        />
+      </FormProvider>
+
       <section className={styles.entries} aria-labelledby="diary-entries-title">
         <h2 id="diary-entries-title" className={styles.entriesTitle}>
           {entriesHeading}
         </h2>
 
         <div className={styles.entriesGrid}>
-          {entries.map((entry) => (
-            <DiaryRecordItem
-              key={entry.id}
-              entry={entry}
-              locale={locale}
-              onEdit={openEditModal}
-              onDelete={onDeleteEntry}
-            />
-          ))}
+          {entries.length > 0 ? (
+            entries.map((entry) => (
+              <DiaryRecordItem
+                key={entry.id}
+                entry={entry}
+                locale={locale}
+                onEdit={openEditModal}
+                onDelete={onDeleteEntry}
+              />
+            ))
+          ) : (
+            <p className={styles.emptyState}>{noEntriesLabel}</p>
+          )}
         </div>
       </section>
 

@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
-import { createEntry } from "@/lib/diary-repository";
-import type { DiaryEntry } from "@/views/diary/diary-entry.types";
+import { createEntry, listEntriesByUserId } from "@/lib/diary-repository";
+import type { DiaryEntriesFilter, DiaryEntry } from "@/views/diary/diary-entry.types";
 import { z } from "zod";
 
 const bodySchema = z.object({
@@ -16,16 +16,27 @@ const bodySchema = z.object({
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<DiaryEntry | { error: string }>,
+  res: NextApiResponse<DiaryEntry | DiaryEntry[] | { error: string }>,
 ) {
-  if (req.method !== "POST") {
-    res.setHeader("Allow", "POST");
+  if (req.method !== "GET" && req.method !== "POST") {
+    res.setHeader("Allow", "GET, POST");
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   const session = await getServerSession(req, res, authOptions);
   if (!session?.user?.id) {
     return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  if (req.method === "GET") {
+    const filters: DiaryEntriesFilter = {
+      projectId: parseFilterQueryValue(req.query.projectId) || null,
+      skills: parseSkillFilter(req.query.skills),
+      fromDate: parseFilterQueryValue(req.query.fromDate),
+      toDate: parseFilterQueryValue(req.query.toDate),
+    };
+    const entries = await listEntriesByUserId(session.user.id, filters);
+    return res.status(200).json(entries);
   }
 
   const parsed = bodySchema.safeParse(req.body);
@@ -35,4 +46,13 @@ export default async function handler(
 
   const entry = await createEntry(session.user.id, parsed.data);
   return res.status(201).json(entry);
+}
+
+function parseFilterQueryValue(value: string | string[] | undefined) {
+  return typeof value === "string" && value.trim().length > 0 ? value.trim() : "";
+}
+
+function parseSkillFilter(value: string | string[] | undefined): string[] {
+  if (typeof value !== "string") return [];
+  return [...new Set(value.split(",").map((item) => item.trim()).filter(Boolean))];
 }

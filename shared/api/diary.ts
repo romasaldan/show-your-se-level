@@ -1,5 +1,34 @@
-import type { DiaryEntry, DiaryEntryDraft } from "@/views/diary/diary-entry.types";
+import type {
+  DiaryEntriesFilter,
+  DiaryEntry,
+  DiaryEntryDraft,
+} from "@/views/diary/diary-entry.types";
 import { executeAction, parseApiResponse } from "@/shared/api/utils";
+
+function toDiaryFilterQuery(filters: DiaryEntriesFilter): string {
+  const query = new URLSearchParams();
+
+  if (filters.projectId) {
+    query.set("projectId", filters.projectId);
+  }
+  if (filters.skills.length > 0) {
+    query.set("skills", filters.skills.join(","));
+  }
+  if (filters.fromDate) {
+    query.set("fromDate", filters.fromDate);
+  }
+  if (filters.toDate) {
+    query.set("toDate", filters.toDate);
+  }
+
+  const serialized = query.toString();
+  return serialized.length > 0 ? `?${serialized}` : "";
+}
+
+export async function listDiaryEntries(filters: DiaryEntriesFilter): Promise<DiaryEntry[]> {
+  const response = await fetch(`/api/diary${toDiaryFilterQuery(filters)}`);
+  return parseApiResponse<DiaryEntry[]>(response, "Failed to load entries");
+}
 
 export async function createDiaryEntry(draft: DiaryEntryDraft): Promise<DiaryEntry> {
   const response = await fetch("/api/diary", {
@@ -41,6 +70,28 @@ type DiaryActionCallbacks = {
   onError?: (message: string) => void;
   onSettled?: () => void;
 };
+
+type ListDiaryEntriesActionParams = DiaryActionCallbacks & {
+  filters: DiaryEntriesFilter;
+  onListed: (entries: DiaryEntry[]) => void;
+};
+
+export async function listDiaryEntriesAction({
+  filters,
+  onListed,
+  onSuccess,
+  onError,
+  onSettled,
+}: ListDiaryEntriesActionParams): Promise<void> {
+  await executeAction({
+    run: () => listDiaryEntries(filters),
+    onResolved: onListed,
+    onSuccess,
+    onError,
+    onSettled,
+    fallbackErrorMessage: "Failed to load entries",
+  });
+}
 
 type CreateDiaryEntryActionParams = DiaryActionCallbacks & {
   draft: DiaryEntryDraft;

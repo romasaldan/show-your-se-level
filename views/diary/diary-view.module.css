@@ -41,6 +41,14 @@
   gap: 0.875rem;
 }
 
+.emptyState {
+  margin: 0;
+  border: 1px dashed rgba(0, 0, 0, 0.2);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  color: rgba(0, 0, 0, 0.72);
+}
+
 @media (min-width: 768px) {
   .root {
     gap: 1.5rem;
@@ -58,4 +66,9 @@
 :global(.dark) .addEntryButton {
   background-color: #e5e7eb;
   color: #111827;
+}
+
+:global(.dark) .emptyState {
+  border-color: rgba(255, 255, 255, 0.22);
+  color: rgba(255, 255, 255, 0.78);
 }

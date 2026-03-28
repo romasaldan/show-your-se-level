@@ -21,3 +21,10 @@ export type DiaryEntry = {
 };
 
 export type DiaryEntryDraft = Omit<DiaryEntry, "id" | "projectName">;
+
+export type DiaryEntriesFilter = {
+  projectId: string | null;
+  skills: string[];
+  fromDate: string;
+  toDate: string;
+};

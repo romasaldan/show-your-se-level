@@ -1,5 +1,11 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import type { DiaryEntry, DiaryEntryDraft, ProjectOption } from "@/views/diary/diary-entry.types";
+import type {
+  DiaryEntry,
+  DiaryEntryDraft,
+  DiaryEntriesFilter,
+  ProjectOption,
+} from "@/views/diary/diary-entry.types";
 
 function parseSkillNames(skills: string): string[] {
   return skills
@@ -8,9 +14,46 @@ function parseSkillNames(skills: string): string[] {
     .filter(Boolean);
 }
 
-export async function listEntriesByUserId(userId: string): Promise<DiaryEntry[]> {
+export async function listEntriesByUserId(
+  userId: string,
+  filters?: DiaryEntriesFilter,
+): Promise<DiaryEntry[]> {
+  const normalizedSkills = [...new Set((filters?.skills ?? []).map((skill) => skill.trim()))].filter(
+    Boolean,
+  );
+
+  const where: Prisma.AchievementWhereInput = {
+    userId,
+  };
+
+  if (filters?.projectId) {
+    where.projectId = filters.projectId;
+  }
+
+  if (filters?.fromDate || filters?.toDate) {
+    where.date = {
+      ...(filters.fromDate ? { gte: filters.fromDate } : {}),
+      ...(filters.toDate ? { lte: filters.toDate } : {}),
+    };
+  }
+
+  if (normalizedSkills.length > 0) {
+    where.AND = normalizedSkills.map((skillName) => ({
+      skills: {
+        some: {
+          skill: {
+            name: {
+              equals: skillName,
+              mode: "insensitive",
+            },
+          },
+        },
+      },
+    }));
+  }
+
   const achievements = await prisma.achievement.findMany({
-    where: { userId },
+    where,
     orderBy: { date: "desc" },
     include: {
       project: { select: { id: true, name: true } },
