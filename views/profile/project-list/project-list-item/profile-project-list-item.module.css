@@ -1,0 +1,49 @@
+.projectListItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.first {
+  padding-top: 0;
+  border-top: none;
+}
+
+.projectName {
+  font-weight: 600;
+}
+
+.projectMeta {
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.projectActions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.projectImmutableNote {
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+@media (min-width: 768px) {
+  .projectListItem {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+:global(.dark) .projectListItem {
+  border-top-color: rgba(255, 255, 255, 0.18);
+}
+
+:global(.dark) .projectImmutableNote {
+  color: rgba(255, 255, 255, 0.75);
+}

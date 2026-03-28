@@ -2,19 +2,31 @@ import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "nex
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 import { defaultLocale, isAppLocale, type AppLocale } from "@/i18n/config";
-import { t } from "@/i18n/t";
+import {
+  getProfileByUserId,
+  listAvailableSkills,
+  listEncounteredSkillsForUser,
+  listProjectsForProfile,
+} from "@/lib/profile-repository";
+import { ProfileView } from "@/views/profile/profile-view";
 
 type ProfilePageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-export default function ProfilePage({ label, locale }: ProfilePageProps) {
-  const title = t(locale as AppLocale, "page.profile.title");
-  const signedInAs = t(locale as AppLocale, "page.profile.signedInAs", { label });
-
+export default function ProfilePage({
+  locale,
+  identity,
+  projects,
+  encounteredSkills,
+  availableSkills,
+}: ProfilePageProps) {
   return (
-    <main>
-      <h1>{title}</h1>
-      <p>{signedInAs}</p>
-    </main>
+    <ProfileView
+      locale={locale as AppLocale}
+      identity={identity}
+      initialProjects={projects}
+      initialEncounteredSkills={encounteredSkills}
+      availableSkills={availableSkills}
+    />
   );
 }
 
@@ -24,7 +36,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     : defaultLocale;
   const session = await getServerSession(context.req, context.res, authOptions);
 
-  if (!session?.user) {
+  if (!session?.user?.id) {
     return {
       redirect: {
         destination: `/${locale}/auth`,
@@ -33,13 +45,21 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 
+  const userId = session.user.id;
+  const [identity, projects, encounteredSkills, availableSkills] = await Promise.all([
+    getProfileByUserId(userId),
+    listProjectsForProfile(userId),
+    listEncounteredSkillsForUser(userId),
+    listAvailableSkills(),
+  ]);
+
   return {
     props: {
-      label:
-        session.user.name ??
-        session.user.email ??
-        t(locale, "common.signedInUser"),
       locale,
+      identity,
+      projects,
+      encounteredSkills,
+      availableSkills,
     },
   };
 }

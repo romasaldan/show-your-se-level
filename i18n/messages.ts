@@ -17,6 +17,45 @@ export const MESSAGES: Record<AppLocale, Messages> = {
 
     "page.profile.title": "Profile",
     "page.profile.signedInAs": "Signed in as {label}",
+    "page.profile.github.heading": "GitHub profile",
+    "page.profile.github.avatarAlt": "Avatar of {login}",
+    "page.profile.github.openLink": "Open GitHub profile",
+
+    "page.profile.projects.heading": "Projects",
+    "page.profile.projects.createButton": "Create project",
+    "page.profile.projects.empty": "No projects yet.",
+    "page.profile.projects.confirm.delete": "Delete this project?",
+    "page.profile.projects.toast.saveFailed": "Failed to save project",
+    "page.profile.projects.toast.deleteFailed": "Failed to delete project",
+    "page.profile.projects.kind.label": "Kind",
+    "page.profile.projects.kind.general": "General",
+    "page.profile.projects.kind.company": "Company",
+    "page.profile.projects.kind.personal": "Personal",
+    "page.profile.projects.skills.label": "Skills",
+    "page.profile.projects.skills.empty": "No skills assigned",
+    "page.profile.projects.actions.edit": "Edit",
+    "page.profile.projects.actions.delete": "Delete",
+    "page.profile.projects.generalLock": "General project cannot be changed.",
+    "page.profile.projects.errors.generalImmutable":
+      "General project cannot be edited or deleted",
+
+    "page.profile.projects.form.title.create": "Create project",
+    "page.profile.projects.form.title.edit": "Edit project",
+    "page.profile.projects.form.fields.name": "Project name",
+    "page.profile.projects.form.fields.kind": "Project kind",
+    "page.profile.projects.form.fields.skills": "Project skills",
+    "page.profile.projects.form.placeholders.nameCreate":
+      "Name of your project",
+    "page.profile.projects.form.placeholders.nameEdit": "Update project name",
+    "page.profile.projects.form.placeholders.skills": "Select project skills",
+    "page.profile.projects.form.actions.cancel": "Cancel",
+    "page.profile.projects.form.actions.save": "Save",
+    "page.profile.projects.form.errors.nameRequired":
+      "Project name is required",
+
+    "page.profile.skills.heading": "Encountered skills",
+    "page.profile.skills.empty":
+      "No skills encountered yet in projects or diary entries.",
 
     "page.diary.title": "Diary",
     "page.diary.subtitle":
@@ -130,6 +169,48 @@ export const MESSAGES: Record<AppLocale, Messages> = {
 
     "page.profile.title": "Профіль",
     "page.profile.signedInAs": "Увійшли як {label}",
+    "page.profile.github.heading": "Профіль GitHub",
+    "page.profile.github.avatarAlt": "Аватар користувача {login}",
+    "page.profile.github.openLink": "Відкрити профіль GitHub",
+
+    "page.profile.projects.heading": "Проєкти",
+    "page.profile.projects.createButton": "Створити проєкт",
+    "page.profile.projects.empty": "Поки немає проєктів.",
+    "page.profile.projects.confirm.delete": "Видалити цей проєкт?",
+    "page.profile.projects.toast.saveFailed": "Не вдалося зберегти проєкт",
+    "page.profile.projects.toast.deleteFailed":
+      "Не вдалося видалити проєкт",
+    "page.profile.projects.kind.label": "Тип",
+    "page.profile.projects.kind.general": "Загальний",
+    "page.profile.projects.kind.company": "Компанійний",
+    "page.profile.projects.kind.personal": "Особистий",
+    "page.profile.projects.skills.label": "Навички",
+    "page.profile.projects.skills.empty": "Навички не вказані",
+    "page.profile.projects.actions.edit": "Редагувати",
+    "page.profile.projects.actions.delete": "Видалити",
+    "page.profile.projects.generalLock": "Загальний проєкт не можна змінювати.",
+    "page.profile.projects.errors.generalImmutable":
+      "Загальний проєкт не можна редагувати або видаляти",
+
+    "page.profile.projects.form.title.create": "Створити проєкт",
+    "page.profile.projects.form.title.edit": "Редагувати проєкт",
+    "page.profile.projects.form.fields.name": "Назва проєкту",
+    "page.profile.projects.form.fields.kind": "Тип проєкту",
+    "page.profile.projects.form.fields.skills": "Навички проєкту",
+    "page.profile.projects.form.placeholders.nameCreate":
+      "Назва вашого проєкту",
+    "page.profile.projects.form.placeholders.nameEdit":
+      "Оновіть назву проєкту",
+    "page.profile.projects.form.placeholders.skills":
+      "Оберіть навички проєкту",
+    "page.profile.projects.form.actions.cancel": "Скасувати",
+    "page.profile.projects.form.actions.save": "Зберегти",
+    "page.profile.projects.form.errors.nameRequired":
+      "Назва проєкту є обов'язковою",
+
+    "page.profile.skills.heading": "Задіяні навички",
+    "page.profile.skills.empty":
+      "Поки немає навичок, задіяних у проєктах або записах щоденника.",
 
     "page.diary.title": "Щоденник",
     "page.diary.subtitle":

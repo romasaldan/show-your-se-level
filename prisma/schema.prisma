@@ -48,6 +48,7 @@ model Project {
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   achievements Achievement[]
+  skills       ProjectSkill[]
 
   @@unique([userId, name])
 }
@@ -78,6 +79,7 @@ model Skill {
   updatedAt DateTime @updatedAt
 
   achievements AchievementSkill[]
+  projects     ProjectSkill[]
 }
 
 model AchievementSkill {
@@ -88,4 +90,14 @@ model AchievementSkill {
   skill       Skill       @relation(fields: [skillId], references: [id], onDelete: Cascade)
 
   @@id([achievementId, skillId])
+}
+
+model ProjectSkill {
+  projectId String
+  skillId   String
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  skill   Skill   @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, skillId])
 }

@@ -2,16 +2,13 @@
 
 import styles from "./diary-view.module.css";
 
-import { useMemo, useState } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
 import type { AppLocale } from "@/i18n/config";
 import { t } from "@/i18n/t";
-import {
-  createDiaryEntryAction,
-  deleteDiaryEntryAction,
-  updateDiaryEntryAction,
-} from "@/shared/api/diary";
+import { useEditModalState } from "@/shared/hooks/use-edit-modal-state";
+import { findById } from "@/shared/utils/find-by-id";
 import { Button } from "@/shared/components/button/button";
+import { useDiaryEntryActions } from "./hooks/use-diary-entry-actions";
 import { DiaryRecordItem } from "./diary-record-item/diary-record-item";
 import type {
   DiaryEntry,
@@ -44,10 +41,13 @@ export function DiaryView({
   const deleteConfirmLabel = t(locale, "page.diary.confirm.delete");
 
   const [entries, setEntries] = useState<DiaryEntry[]>(initialEntries);
-  const [isEntryModalOpen, setIsEntryModalOpen] = useState(false);
-  const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
-  const [deletingEntryId, setDeletingEntryId] = useState<string | null>(null);
+  const {
+    isModalOpen: isEntryModalOpen,
+    editingId: editingEntryId,
+    closeModal,
+    openCreateModal,
+    openEditModal,
+  } = useEditModalState<string>();
 
   const defaultProject = projects.find((p) => p.isDefault) ?? projects[0];
 
@@ -60,10 +60,7 @@ export function DiaryView({
     importance: "medium" satisfies ImportanceLevel,
   };
 
-  const editingEntry = useMemo(
-    () => (editingEntryId ? entries.find((e) => e.id === editingEntryId) : null),
-    [entries, editingEntryId],
-  );
+  const editingEntry = findById(entries, editingEntryId);
 
   const modalMode: "create" | "edit" = editingEntry ? "edit" : "create";
 
@@ -78,62 +75,14 @@ export function DiaryView({
       }
     : defaultDraft;
 
-  const closeModal = () => {
-    setIsEntryModalOpen(false);
-    setEditingEntryId(null);
-  };
-
-  const openCreateModal = () => {
-    setEditingEntryId(null);
-    setIsEntryModalOpen(true);
-  };
-
-  const openEditModal = (entryId: string) => {
-    setEditingEntryId(entryId);
-    setIsEntryModalOpen(true);
-  };
-
-  const onSaveDraft = async (draft: DiaryEntryDraft) => {
-    setIsSaving(true);
-    if (editingEntryId) {
-      await updateDiaryEntryAction({
-        entryId: editingEntryId,
-        draft,
-        onUpdated: (updated) =>
-          setEntries((prev) => prev.map((e) => (e.id === updated.id ? updated : e))),
-        onSuccess: closeModal,
-        onError: (message) => toast.error(message || saveErrorLabel),
-        onSettled: () => setIsSaving(false),
-      });
-      return;
-    }
-
-    await createDiaryEntryAction({
-      draft,
-      onCreated: (created) => setEntries((prev) => [created, ...prev]),
-      onSuccess: closeModal,
-      onError: (message) => toast.error(message || saveErrorLabel),
-      onSettled: () => setIsSaving(false),
-    });
-  };
-
-  const onDeleteEntry = async (entryId: string) => {
-    if (deletingEntryId) return;
-    if (!window.confirm(deleteConfirmLabel)) return;
-
-    setDeletingEntryId(entryId);
-    await deleteDiaryEntryAction({
-      entryId,
-      onDeleted: (deletedId) => {
-        setEntries((prev) => prev.filter((entry) => entry.id !== deletedId));
-        if (editingEntryId === deletedId) {
-          closeModal();
-        }
-      },
-      onError: (message) => toast.error(message || deleteErrorLabel),
-      onSettled: () => setDeletingEntryId(null),
-    });
-  };
+  const { isSaving, onSaveDraft, onDeleteEntry } = useDiaryEntryActions({
+    editingEntryId,
+    closeModal,
+    saveErrorLabel,
+    deleteErrorLabel,
+    deleteConfirmLabel,
+    setEntries,
+  });
 
   return (
     <div className={styles.root}>

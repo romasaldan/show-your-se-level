@@ -1,0 +1,73 @@
+.identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.identityContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.avatar,
+.avatarFallback {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 9999px;
+}
+
+.avatar {
+  object-fit: cover;
+}
+
+.avatarFallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.identityText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.identityName {
+  font-weight: 600;
+}
+
+.identityLogin {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.identityBio {
+  line-height: 1.45;
+}
+
+.githubLink {
+  text-decoration: underline;
+  width: fit-content;
+}
+
+@media (min-width: 768px) {
+  .identityContent {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+:global(.dark) .identityLogin {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+:global(.dark) .avatarFallback {
+  background: rgba(255, 255, 255, 0.12);
+}

@@ -1,0 +1,33 @@
+.projects {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.projectsHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.projectList {
+  list-style: disc;
+  margin-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .projectsHeader {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
