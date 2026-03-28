@@ -16,6 +16,7 @@ type UseDiaryEntryActionsParams = {
   deleteErrorLabel: string;
   deleteConfirmLabel: string;
   refreshEntries: () => Promise<void>;
+  onSavedDraft?: (draft: DiaryEntryDraft) => void;
 };
 
 export function useDiaryEntryActions({
@@ -25,6 +26,7 @@ export function useDiaryEntryActions({
   deleteErrorLabel,
   deleteConfirmLabel,
   refreshEntries,
+  onSavedDraft,
 }: UseDiaryEntryActionsParams) {
   const [isSaving, setIsSaving] = useState(false);
   const [deletingEntryId, setDeletingEntryId] = useState<string | null>(null);
@@ -39,6 +41,7 @@ export function useDiaryEntryActions({
       }
 
       await refreshEntries();
+      onSavedDraft?.(draft);
       closeModal();
     } catch (error) {
       const message = error instanceof Error ? error.message : saveErrorLabel;

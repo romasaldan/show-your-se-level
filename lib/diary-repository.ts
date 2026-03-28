@@ -8,10 +8,12 @@ import type {
 } from "@/views/diary/diary-entry.types";
 
 function parseSkillNames(skills: string): string[] {
-  return skills
+  const normalized = skills
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
+
+  return [...new Set(normalized)];
 }
 
 export async function listEntriesByUserId(
@@ -78,23 +80,30 @@ export async function createEntry(
   draft: DiaryEntryDraft,
 ): Promise<DiaryEntry> {
   const skillNames = parseSkillNames(draft.skills);
+  const achievement = await prisma.$transaction(async (tx) => {
+    const skills = await upsertSkills(skillNames, tx);
 
-  const achievement = await prisma.achievement.create({
-    data: {
-      userId,
-      projectId: draft.projectId,
-      date: draft.date,
-      title: draft.title,
-      details: draft.details,
-      importance: draft.importance,
-      skills: {
-        create: await buildSkillConnections(skillNames),
+    const created = await tx.achievement.create({
+      data: {
+        userId,
+        projectId: draft.projectId,
+        date: draft.date,
+        title: draft.title,
+        details: draft.details,
+        importance: draft.importance,
+        skills: {
+          create: toAchievementSkillConnections(skills),
+        },
       },
-    },
-    include: {
-      project: { select: { id: true, name: true } },
-      skills: { include: { skill: { select: { name: true } } } },
-    },
+      include: {
+        project: { select: { id: true, name: true } },
+        skills: { include: { skill: { select: { name: true } } } },
+      },
+    });
+
+    await ensureProjectHasSkills(draft.projectId, skills, tx);
+
+    return created;
   });
 
   return toEntry(achievement);
@@ -116,26 +125,34 @@ export async function updateEntry(
 
   const skillNames = parseSkillNames(draft.skills);
 
-  await prisma.achievementSkill.deleteMany({
-    where: { achievementId },
-  });
+  const achievement = await prisma.$transaction(async (tx) => {
+    const skills = await upsertSkills(skillNames, tx);
 
-  const achievement = await prisma.achievement.update({
-    where: { id: achievementId },
-    data: {
-      projectId: draft.projectId,
-      date: draft.date,
-      title: draft.title,
-      details: draft.details,
-      importance: draft.importance,
-      skills: {
-        create: await buildSkillConnections(skillNames),
+    await tx.achievementSkill.deleteMany({
+      where: { achievementId },
+    });
+
+    const updated = await tx.achievement.update({
+      where: { id: achievementId },
+      data: {
+        projectId: draft.projectId,
+        date: draft.date,
+        title: draft.title,
+        details: draft.details,
+        importance: draft.importance,
+        skills: {
+          create: toAchievementSkillConnections(skills),
+        },
       },
-    },
-    include: {
-      project: { select: { id: true, name: true } },
-      skills: { include: { skill: { select: { name: true } } } },
-    },
+      include: {
+        project: { select: { id: true, name: true } },
+        skills: { include: { skill: { select: { name: true } } } },
+      },
+    });
+
+    await ensureProjectHasSkills(draft.projectId, skills, tx);
+
+    return updated;
   });
 
   return toEntry(achievement);
@@ -179,20 +196,47 @@ export async function listProjectsByUserId(userId: string): Promise<ProjectOptio
   }));
 }
 
-async function buildSkillConnections(skillNames: string[]) {
+type SkillRecord = {
+  id: string;
+  name: string;
+};
+
+async function upsertSkills(
+  skillNames: string[],
+  tx: Prisma.TransactionClient = prisma,
+): Promise<SkillRecord[]> {
   if (skillNames.length === 0) return [];
 
-  await prisma.skill.createMany({
+  await tx.skill.createMany({
     data: skillNames.map((name) => ({ name })),
     skipDuplicates: true,
   });
 
-  const skills = await prisma.skill.findMany({
+  return tx.skill.findMany({
     where: { name: { in: skillNames } },
-    select: { id: true },
+    select: { id: true, name: true },
   });
+}
 
-  return skills.map((s) => ({ skillId: s.id }));
+function toAchievementSkillConnections(skills: SkillRecord[]) {
+  return skills.map((skill) => ({ skillId: skill.id }));
+}
+
+async function ensureProjectHasSkills(
+  projectId: string,
+  skills: SkillRecord[],
+  tx: Prisma.TransactionClient = prisma,
+) {
+  if (skills.length === 0) return;
+
+  const values = skills.map((skill) => Prisma.sql`(${projectId}, ${skill.id})`);
+  await tx.$executeRaw(
+    Prisma.sql`
+      INSERT INTO "ProjectSkill" ("projectId", "skillId")
+      VALUES ${Prisma.join(values)}
+      ON CONFLICT ("projectId", "skillId") DO NOTHING
+    `,
+  );
 }
 
 type AchievementWithRelations = {

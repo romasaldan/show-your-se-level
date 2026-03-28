@@ -6,6 +6,7 @@ import { useCallback, useState } from "react";
 import type { AppLocale } from "@/i18n/config";
 import { useEditModalState } from "@/shared/hooks/use-edit-modal-state";
 import { findById } from "@/shared/utils/find-by-id";
+import { mergeUnique } from "@/shared/utils/merge-unique";
 import { Button } from "@/shared/components/button/button";
 import { toast } from "sonner";
 import { FormProvider, useForm } from "react-hook-form";
@@ -60,6 +61,7 @@ export function DiaryView({
   } = useDiaryViewLabels({ locale, label });
 
   const [entries, setEntries] = useState<DiaryEntry[]>(initialEntries);
+  const [availableSkills, setAvailableSkills] = useState<string[]>(skills);
   const filterMethods = useForm<DiaryFiltersFormValues>({
     defaultValues: defaultFilterValues,
   });
@@ -120,6 +122,14 @@ export function DiaryView({
     deleteErrorLabel,
     deleteConfirmLabel,
     refreshEntries,
+    onSavedDraft: (draft) => {
+      const nextSkills = draft.skills
+        .split(",")
+        .map((skill) => skill.trim())
+        .filter(Boolean);
+
+      setAvailableSkills((prev) => mergeUnique(prev, nextSkills));
+    },
   });
 
   const onChangeFilters = useCallback(
@@ -152,7 +162,7 @@ export function DiaryView({
         <DiaryFilters
           locale={locale}
           projects={projects}
-          skills={skills}
+          skills={availableSkills}
           onChangeFilters={onChangeFilters}
         />
       </FormProvider>
@@ -185,7 +195,7 @@ export function DiaryView({
         mode={modalMode}
         initialValues={modalInitialValues}
         projects={projects}
-        skills={skills}
+        skills={availableSkills}
         onClose={closeModal}
         onSave={onSaveDraft}
       />

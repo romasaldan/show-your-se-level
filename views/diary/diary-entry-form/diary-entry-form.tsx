@@ -5,8 +5,8 @@ import type { AppLocale } from "@/i18n/config";
 import styles from "./diary-entry-form.module.css";
 import { FormActions } from "@/shared/components/form-actions/form-actions";
 import { Select } from "@/shared/components/select/select";
-import { Combobox } from "@/shared/components/combobox/combobox";
-import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { SkillsCombobox } from "@/modules/skills/skills-combobox/skills-combobox";
+import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RhfInputField } from "@/shared/forms/rhf-input-field";
 import { RhfTextareaField } from "@/shared/forms/rhf-textarea-field";
@@ -63,22 +63,8 @@ export function DiaryEntryForm({
     },
   });
 
-  const selectedSkills = useWatch({
-    control: methods.control,
-    name: "selectedSkills",
-    defaultValue: parseSkills(initialValues.skills),
-  });
-
   const importanceLabel = (level: ImportanceLevel) =>
     t(locale, `page.diary.importance.${level}`);
-
-  const baseSkillValues = new Set(skills);
-  const skillOptions = [
-    ...skills.map((name) => ({ value: name, label: name })),
-    ...selectedSkills
-      .filter((v) => !baseSkillValues.has(v))
-      .map((v) => ({ value: v, label: v })),
-  ];
 
   const projectOptions = projects.map((p) => ({ value: p.id, label: p.name }));
 
@@ -148,12 +134,15 @@ export function DiaryEntryForm({
           name="selectedSkills"
           label={t(locale, "page.diary.form.fields.skills")}
           render={(field) => (
-            <Combobox
+            <SkillsCombobox
               label={t(locale, "page.diary.form.fields.skills")}
-              options={skillOptions}
+              skills={skills}
               values={field.value as string[]}
               onChange={field.onChange}
               placeholder={t(locale, "page.diary.form.placeholders.skills")}
+              createOptionLabel={(value) =>
+                t(locale, "shared.skillsCombobox.createOption", { value })
+              }
             />
           )}
         />

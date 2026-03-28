@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import {
   Combobox as ShadcnCombobox,
   ComboboxChips,
@@ -23,6 +24,8 @@ type ComboboxProps = {
   onChange: (values: string[]) => void;
   placeholder?: string;
   label?: string;
+  allowCreate?: boolean;
+  createOptionLabel?: (value: string) => string;
 };
 
 export function Combobox({
@@ -31,12 +34,32 @@ export function Combobox({
   onChange,
   placeholder,
   label,
+  allowCreate = false,
+  createOptionLabel = (value) => `Add "${value}"`,
 }: ComboboxProps) {
+  const [inputValue, setInputValue] = useState("");
   const anchorRef = useComboboxAnchor();
-  const optionLabelByValue = new Map<string, string>(
-    options.map((opt) => [opt.value, opt.label] as const),
+  const normalizedOptionValues = useMemo(
+    () => new Set(options.map((opt) => opt.value.trim().toLowerCase())),
+    [options],
   );
-  const items = options.map((o) => o.value);
+  const createCandidate = inputValue.trim();
+  const shouldShowCreateCandidate =
+    allowCreate &&
+    createCandidate.length > 0 &&
+    !normalizedOptionValues.has(createCandidate.toLowerCase());
+  const optionLabelByValue = new Map<string, string>(
+    [
+      ...options,
+      ...(shouldShowCreateCandidate
+        ? [{ value: createCandidate, label: createOptionLabel(createCandidate) }]
+        : []),
+    ].map((opt) => [opt.value, opt.label] as const),
+  );
+  const items = [
+    ...options.map((o) => o.value),
+    ...(shouldShowCreateCandidate ? [createCandidate] : []),
+  ];
 
   return (
     <div className="w-full">
@@ -47,6 +70,7 @@ export function Combobox({
         items={items}
         value={values}
         onValueChange={onChange}
+        onInputValueChange={setInputValue}
       >
         <ComboboxChips ref={anchorRef}>
           <ComboboxValue>

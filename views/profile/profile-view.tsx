@@ -33,6 +33,8 @@ export function ProfileView({
   const [encounteredSkills, setEncounteredSkills] = useState<string[]>(
     initialEncounteredSkills,
   );
+  const [availableProjectSkills, setAvailableProjectSkills] =
+    useState<string[]>(availableSkills);
   const {
     isModalOpen: isProjectModalOpen,
     editingId: editingProjectId,
@@ -66,7 +68,7 @@ export function ProfileView({
         skillNames: [],
       };
 
-  const projectSkillOptions = sortStrings(availableSkills);
+  const projectSkillOptions = sortStrings(availableProjectSkills);
 
   const sortedEncounteredSkills = sortStrings(encounteredSkills);
 
@@ -83,6 +85,7 @@ export function ProfileView({
       ),
       setProjects,
       setEncounteredSkills,
+      setAvailableSkills: setAvailableProjectSkills,
     });
 
   return (

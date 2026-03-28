@@ -20,6 +20,7 @@ type UseProfileProjectActionsParams = {
   generalImmutableErrorLabel: string;
   setProjects: Dispatch<SetStateAction<ProfileProject[]>>;
   setEncounteredSkills: Dispatch<SetStateAction<string[]>>;
+  setAvailableSkills: Dispatch<SetStateAction<string[]>>;
 };
 
 export function useProfileProjectActions({
@@ -31,6 +32,7 @@ export function useProfileProjectActions({
   generalImmutableErrorLabel,
   setProjects,
   setEncounteredSkills,
+  setAvailableSkills,
 }: UseProfileProjectActionsParams) {
   const [isSaving, setIsSaving] = useState(false);
   const [deletingProjectId, setDeletingProjectId] = useState<string | null>(null);
@@ -45,6 +47,7 @@ export function useProfileProjectActions({
         onUpdated: (updated) => {
           setProjects((prev) => prev.map((project) => (project.id === updated.id ? updated : project)));
           setEncounteredSkills((prev) => mergeUnique(prev, updated.skills));
+          setAvailableSkills((prev) => mergeUnique(prev, updated.skills));
         },
         onSuccess: closeModal,
         onError: (message) => toast.error(message || saveErrorLabel),
@@ -58,6 +61,7 @@ export function useProfileProjectActions({
       onCreated: (created) => {
         setProjects((prev) => sortProjects([created, ...prev]));
         setEncounteredSkills((prev) => mergeUnique(prev, created.skills));
+        setAvailableSkills((prev) => mergeUnique(prev, created.skills));
       },
       onSuccess: closeModal,
       onError: (message) => toast.error(message || saveErrorLabel),

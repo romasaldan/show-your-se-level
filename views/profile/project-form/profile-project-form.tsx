@@ -1,12 +1,12 @@
 "use client";
 
-import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { AppLocale } from "@/i18n/config";
 import { t } from "@/i18n/t";
 import { FormActions } from "@/shared/components/form-actions/form-actions";
 import { Select } from "@/shared/components/select/select";
-import { Combobox } from "@/shared/components/combobox/combobox";
+import { SkillsCombobox } from "@/modules/skills/skills-combobox/skills-combobox";
 import { RhfControllerField } from "@/shared/forms/rhf-controller-field";
 import { RhfInputField } from "@/shared/forms/rhf-input-field";
 import type { ProjectDraft } from "../profile.types";
@@ -45,20 +45,6 @@ export function ProfileProjectForm({
       selectedSkills: initialValues.skillNames,
     },
   });
-
-  const selectedSkills = useWatch({
-    control: methods.control,
-    name: "selectedSkills",
-    defaultValue: initialValues.skillNames,
-  });
-
-  const baseSkillValues = new Set(skillOptions);
-  const comboboxOptions = [
-    ...skillOptions.map((name) => ({ value: name, label: name })),
-    ...selectedSkills
-      .filter((value) => !baseSkillValues.has(value))
-      .map((value) => ({ value, label: value })),
-  ];
 
   return (
     <FormProvider {...methods}>
@@ -109,12 +95,15 @@ export function ProfileProjectForm({
           name="selectedSkills"
           label={t(locale, "page.profile.projects.form.fields.skills")}
           render={(field) => (
-            <Combobox
+            <SkillsCombobox
               label={t(locale, "page.profile.projects.form.fields.skills")}
-              options={comboboxOptions}
+              skills={skillOptions}
               values={field.value as string[]}
               onChange={field.onChange}
               placeholder={t(locale, "page.profile.projects.form.placeholders.skills")}
+              createOptionLabel={(value) =>
+                t(locale, "shared.skillsCombobox.createOption", { value })
+              }
             />
           )}
         />

@@ -11,6 +11,7 @@ export const MESSAGES: Record<AppLocale, Messages> = {
     "nav.logout": "Log out",
 
     "common.signedInUser": "Signed-in user",
+    "shared.skillsCombobox.createOption": `Add "{value}"`,
 
     "page.quiz.title": "Quiz",
     "page.quiz.description": "This is the quiz page skeleton.",
@@ -173,6 +174,7 @@ export const MESSAGES: Record<AppLocale, Messages> = {
     "nav.logout": "Вийти",
 
     "common.signedInUser": "Користувач із сесією",
+    "shared.skillsCombobox.createOption": `Додати "{value}"`,
 
     "page.quiz.title": "Вікторина",
     "page.quiz.description": "Це заготовка сторінки вікторини.",
