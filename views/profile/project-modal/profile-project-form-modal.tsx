@@ -46,7 +46,7 @@ export function ProfileProjectFormModal({
   return (
     <ModalWithDrawer open={open} title={title} onClose={onClose}>
       <ProfileProjectForm
-        key={`${mode}-${initialValues.name}-${initialValues.kind}-${initialValues.skillNames.join(",")}`}
+        key={`${mode}-${initialValues.name}-${initialValues.kind}-${initialValues.startDate ?? ""}-${initialValues.endDate ?? ""}-${initialValues.skillNames.join(",")}`}
         locale={locale}
         mode={mode}
         initialValues={initialValues}

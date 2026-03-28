@@ -11,11 +11,23 @@ import {
 } from "@/lib/profile-repository";
 import type { ProfileProject } from "@/views/profile/profile.types";
 
+const projectDateSchema = z
+  .union([z.number().int().nonnegative(), z.null(), z.undefined()])
+  .transform((value) => value ?? null);
+
 const bodySchema = z.object({
   name: z.string().trim().min(1),
   kind: z.enum(["company", "personal"]),
+  startDate: projectDateSchema,
+  endDate: projectDateSchema,
   skillNames: z.array(z.string()).default([]),
-});
+}).refine(
+  (data) => data.startDate == null || data.endDate == null || data.endDate >= data.startDate,
+  {
+    message: "End date cannot be earlier than start date",
+    path: ["endDate"],
+  },
+);
 
 export default async function handler(
   req: NextApiRequest,

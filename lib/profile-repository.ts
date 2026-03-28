@@ -1,5 +1,11 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import {
+  mapProjectWithDates,
+  normalizeProjectDateFromDb,
+  normalizeProjectDraft,
+  toPrismaProjectDate,
+} from "@/lib/profile-repository.utils";
 import type { ProfileIdentity, ProfileProject, ProjectDraft } from "@/views/profile/profile.types";
 
 export class ProjectAccessError extends Error {}
@@ -30,7 +36,14 @@ export async function listProjectsForProfile(userId: string): Promise<ProfilePro
   const projects = await prisma.project.findMany({
     where: { userId },
     orderBy: [{ isDefault: "desc" }, { name: "asc" }],
-    select: { id: true, name: true, kind: true, isDefault: true },
+    select: {
+      id: true,
+      name: true,
+      kind: true,
+      isDefault: true,
+      startDate: true,
+      endDate: true,
+    },
   });
 
   if (projects.length === 0) {
@@ -60,6 +73,8 @@ export async function listProjectsForProfile(userId: string): Promise<ProfilePro
     name: project.name,
     kind: project.kind,
     isDefault: project.isDefault,
+    startDate: normalizeProjectDateFromDb(project.startDate),
+    endDate: normalizeProjectDateFromDb(project.endDate),
     skills: skillsByProjectId.get(project.id) ?? [],
   }));
 }
@@ -72,14 +87,23 @@ export async function createProject(userId: string, draft: ProjectDraft): Promis
       userId,
       name: normalized.name,
       kind: normalized.kind,
+      startDate: toPrismaProjectDate(normalized.startDate),
+      endDate: toPrismaProjectDate(normalized.endDate),
     },
-    select: { id: true, name: true, kind: true, isDefault: true },
+    select: {
+      id: true,
+      name: true,
+      kind: true,
+      isDefault: true,
+      startDate: true,
+      endDate: true,
+    },
   });
 
   await replaceProjectSkills(project.id, normalized.skillNames);
 
   return {
-    ...project,
+    ...mapProjectWithDates(project),
     skills: normalized.skillNames,
   };
 }
@@ -99,15 +123,24 @@ export async function updateProject(
         data: {
           name: normalized.name,
           kind: normalized.kind,
+          startDate: toPrismaProjectDate(normalized.startDate),
+          endDate: toPrismaProjectDate(normalized.endDate),
         },
-        select: { id: true, name: true, kind: true, isDefault: true },
+        select: {
+          id: true,
+          name: true,
+          kind: true,
+          isDefault: true,
+          startDate: true,
+          endDate: true,
+        },
       })
     : existingProject;
 
   await replaceProjectSkills(project.id, normalized.skillNames);
 
   return {
-    ...project,
+    ...mapProjectWithDates(project),
     skills: normalized.skillNames,
   };
 }
@@ -178,7 +211,15 @@ async function assertProjectDeletable(userId: string, projectId: string): Promis
 async function getOwnedProject(userId: string, projectId: string) {
   const existing = await prisma.project.findUnique({
     where: { id: projectId },
-    select: { id: true, userId: true, name: true, kind: true, isDefault: true },
+    select: {
+      id: true,
+      userId: true,
+      name: true,
+      kind: true,
+      isDefault: true,
+      startDate: true,
+      endDate: true,
+    },
   });
 
   if (!existing || existing.userId !== userId) {
@@ -190,20 +231,9 @@ async function getOwnedProject(userId: string, projectId: string) {
     name: existing.name,
     kind: existing.kind,
     isDefault: existing.isDefault,
+    startDate: normalizeProjectDateFromDb(existing.startDate),
+    endDate: normalizeProjectDateFromDb(existing.endDate),
   };
-}
-
-function normalizeProjectDraft(draft: ProjectDraft): ProjectDraft {
-  return {
-    name: draft.name.trim(),
-    kind: draft.kind,
-    skillNames: normalizeSkillNames(draft.skillNames),
-  };
-}
-
-function normalizeSkillNames(skillNames: string[]): string[] {
-  const normalized = skillNames.map((name) => name.trim()).filter(Boolean);
-  return [...new Set(normalized)];
 }
 
 async function replaceProjectSkills(projectId: string, skillNames: string[]): Promise<void> {

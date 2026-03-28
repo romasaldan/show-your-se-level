@@ -32,6 +32,9 @@ export const MESSAGES: Record<AppLocale, Messages> = {
     "page.profile.projects.kind.general": "General",
     "page.profile.projects.kind.company": "Company",
     "page.profile.projects.kind.personal": "Personal",
+    "page.profile.projects.startDate.label": "Start date",
+    "page.profile.projects.endDate.label": "End date",
+    "page.profile.projects.notSet": "Not set",
     "page.profile.projects.skills.label": "Skills",
     "page.profile.projects.skills.empty": "No skills assigned",
     "page.profile.projects.actions.edit": "Edit",
@@ -45,6 +48,8 @@ export const MESSAGES: Record<AppLocale, Messages> = {
     "page.profile.projects.form.title.edit": "Edit project",
     "page.profile.projects.form.fields.name": "Project name",
     "page.profile.projects.form.fields.kind": "Project kind",
+    "page.profile.projects.form.fields.startDate": "Start date",
+    "page.profile.projects.form.fields.endDate": "End date",
     "page.profile.projects.form.fields.skills": "Project skills",
     "page.profile.projects.form.placeholders.nameCreate":
       "Name of your project",
@@ -54,6 +59,9 @@ export const MESSAGES: Record<AppLocale, Messages> = {
     "page.profile.projects.form.actions.save": "Save",
     "page.profile.projects.form.errors.nameRequired":
       "Project name is required",
+    "page.profile.projects.form.errors.dateInvalid": "Date must be in YYYY-MM-DD format",
+    "page.profile.projects.form.errors.endDateBeforeStart":
+      "End date cannot be earlier than start date",
 
     "page.profile.skills.heading": "Encountered skills",
     "page.profile.skills.empty":
@@ -197,6 +205,9 @@ export const MESSAGES: Record<AppLocale, Messages> = {
     "page.profile.projects.kind.general": "Загальний",
     "page.profile.projects.kind.company": "Компанійний",
     "page.profile.projects.kind.personal": "Особистий",
+    "page.profile.projects.startDate.label": "Дата початку",
+    "page.profile.projects.endDate.label": "Дата завершення",
+    "page.profile.projects.notSet": "Не вказано",
     "page.profile.projects.skills.label": "Навички",
     "page.profile.projects.skills.empty": "Навички не вказані",
     "page.profile.projects.actions.edit": "Редагувати",
@@ -210,6 +221,8 @@ export const MESSAGES: Record<AppLocale, Messages> = {
     "page.profile.projects.form.title.edit": "Редагувати проєкт",
     "page.profile.projects.form.fields.name": "Назва проєкту",
     "page.profile.projects.form.fields.kind": "Тип проєкту",
+    "page.profile.projects.form.fields.startDate": "Дата початку",
+    "page.profile.projects.form.fields.endDate": "Дата завершення",
     "page.profile.projects.form.fields.skills": "Навички проєкту",
     "page.profile.projects.form.placeholders.nameCreate":
       "Назва вашого проєкту",
@@ -221,6 +234,10 @@ export const MESSAGES: Record<AppLocale, Messages> = {
     "page.profile.projects.form.actions.save": "Зберегти",
     "page.profile.projects.form.errors.nameRequired":
       "Назва проєкту є обов'язковою",
+    "page.profile.projects.form.errors.dateInvalid":
+      "Дата має бути у форматі YYYY-MM-DD",
+    "page.profile.projects.form.errors.endDateBeforeStart":
+      "Дата завершення не може бути раніше дати початку",
 
     "page.profile.skills.heading": "Задіяні навички",
     "page.profile.skills.empty":

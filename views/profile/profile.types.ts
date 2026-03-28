@@ -16,11 +16,15 @@ export type ProfileProject = {
   name: string;
   kind: ProjectKind;
   isDefault: boolean;
+  startDate: number | null;
+  endDate: number | null;
   skills: string[];
 };
 
 export type ProjectDraft = {
   name: string;
   kind: EditableProjectKind;
+  startDate: number | null;
+  endDate: number | null;
   skillNames: string[];
 };

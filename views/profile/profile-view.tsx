@@ -63,11 +63,15 @@ export function ProfileView({
     ? {
         name: editingProject.name,
         kind: editingProject.kind === "general" ? "personal" : editingProject.kind,
+        startDate: editingProject.startDate,
+        endDate: editingProject.endDate,
         skillNames: editingProject.skills,
       }
     : {
         name: "",
         kind: "personal",
+        startDate: null,
+        endDate: null,
         skillNames: [],
       };
 

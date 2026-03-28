@@ -3,6 +3,7 @@
 import type { AppLocale } from "@/i18n/config";
 import { t } from "@/i18n/t";
 import { Button } from "@/shared/components/button/button";
+import { formatMillisDate } from "@/shared/utils/format-date";
 import type { ProfileProject } from "../../profile.types";
 import styles from "./profile-project-list-item.module.css";
 
@@ -36,6 +37,18 @@ export function ProfileProjectListItem({
         <p className={styles.projectMeta}>
           {t(locale, "page.profile.projects.kind.label")}:{" "}
           {t(locale, `page.profile.projects.kind.${project.kind}`)}
+        </p>
+        <p className={styles.projectMeta}>
+          {t(locale, "page.profile.projects.startDate.label")}:{" "}
+          {project.startDate != null
+            ? formatMillisDate(project.startDate, locale)
+            : t(locale, "page.profile.projects.notSet")}
+        </p>
+        <p className={styles.projectMeta}>
+          {t(locale, "page.profile.projects.endDate.label")}:{" "}
+          {project.endDate != null
+            ? formatMillisDate(project.endDate, locale)
+            : t(locale, "page.profile.projects.notSet")}
         </p>
         <p className={styles.projectMeta}>
           {t(locale, "page.profile.projects.skills.label")}:{" "}

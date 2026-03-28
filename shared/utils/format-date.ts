@@ -22,3 +22,33 @@ export function formatIsoDate(
     options,
   );
 }
+
+export function formatMillisDate(
+  value: number,
+  locale: AppLocale,
+  options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  },
+): string {
+  if (!Number.isFinite(value)) {
+    return String(value);
+  }
+  return new Date(value).toLocaleDateString(LOCALE_TO_DATE_LOCALE[locale], options);
+}
+
+export function timestampToIsoDate(value: number | null): string | null {
+  if (value == null || !Number.isFinite(value)) {
+    return null;
+  }
+  return new Date(value).toISOString().slice(0, 10);
+}
+
+export function isoDateToTimestamp(value: string | null | undefined): number | null {
+  if (!value) {
+    return null;
+  }
+  const ms = new Date(`${value}T00:00:00`).getTime();
+  return Number.isFinite(ms) ? ms : null;
+}

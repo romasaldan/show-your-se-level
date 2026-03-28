@@ -9,6 +9,8 @@ import { Select } from "@/shared/components/select/select";
 import { SkillsCombobox } from "@/modules/skills/skills-combobox/skills-combobox";
 import { RhfControllerField } from "@/shared/forms/rhf-controller-field";
 import { RhfInputField } from "@/shared/forms/rhf-input-field";
+import { DatePicker } from "@/shared/components/date-picker/date-picker";
+import { isoDateToTimestamp, timestampToIsoDate } from "@/shared/utils/format-date";
 import type { ProjectDraft } from "../profile.types";
 import { createProfileProjectFormSchema } from "./profile-project-form.schema";
 import styles from "./profile-project-form.module.css";
@@ -26,6 +28,8 @@ type ProfileProjectFormProps = {
 type ProfileProjectFormValues = {
   name: string;
   kind: "company" | "personal";
+  startDate: string | null | undefined;
+  endDate: string | null | undefined;
   selectedSkills: string[];
 };
 
@@ -44,6 +48,8 @@ export function ProfileProjectForm({
     defaultValues: {
       name: initialValues.name,
       kind: initialValues.kind,
+      startDate: timestampToIsoDate(initialValues.startDate),
+      endDate: timestampToIsoDate(initialValues.endDate),
       selectedSkills: initialValues.skillNames,
     },
   });
@@ -56,6 +62,8 @@ export function ProfileProjectForm({
           onSubmit({
             name: data.name.trim(),
             kind: data.kind,
+            startDate: isoDateToTimestamp(data.startDate),
+            endDate: isoDateToTimestamp(data.endDate),
             skillNames: data.selectedSkills,
           }),
         )}
@@ -91,6 +99,32 @@ export function ProfileProjectForm({
               ]}
               value={field.value as "company" | "personal"}
               onChange={(value) => field.onChange(value as "company" | "personal")}
+            />
+          )}
+        />
+
+        <RhfControllerField
+          name="startDate"
+          label={t(locale, "page.profile.projects.form.fields.startDate")}
+          render={(field) => (
+            <DatePicker
+              value={(field.value as string | null) ?? undefined}
+              onChange={field.onChange}
+              placeholder={t(locale, "page.profile.projects.form.fields.startDate")}
+              locale={locale}
+            />
+          )}
+        />
+
+        <RhfControllerField
+          name="endDate"
+          label={t(locale, "page.profile.projects.form.fields.endDate")}
+          render={(field) => (
+            <DatePicker
+              value={(field.value as string | null) ?? undefined}
+              onChange={field.onChange}
+              placeholder={t(locale, "page.profile.projects.form.fields.endDate")}
+              locale={locale}
             />
           )}
         />
